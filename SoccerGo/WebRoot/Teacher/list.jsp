@@ -13,12 +13,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
 	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript">
+	<script type="text/javascript"> 
 	  $(document).ready(function() {
 			 $.ajax({
                 type: "POST",
                 dataType: "json",
-                url:"/mvc03/Teacher/list.action",
+                url:"/SoccerGo/Teacher/list.action",
                 success: function (result) {
                     alert(result);
                 }
