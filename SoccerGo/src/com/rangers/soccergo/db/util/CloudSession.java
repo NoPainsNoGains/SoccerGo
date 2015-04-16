@@ -69,7 +69,7 @@ public class CloudSession {
 	public Object get(Class entity,Serializable id){
 		init(entity,id);
 		String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-		//System.out.println(res);
+		System.out.println(res);
 		if(res == null || res.equals("")||res.equals("{}")){
 			return null;
 		}
