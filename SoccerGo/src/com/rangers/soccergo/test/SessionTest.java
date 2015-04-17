@@ -6,9 +6,12 @@ import org.junit.Test;
 
 import com.rangers.soccergo.db.util.CloudQuery;
 import com.rangers.soccergo.db.util.CloudSession;
+import com.rangers.soccergo.db.util.JsonUtil;
 import com.rangers.soccergo.db.util.StringUtil;
+import com.rangers.soccergo.model.Role;
 import com.rangers.soccergo.model.Student;
 import com.rangers.soccergo.model.Teacher;
+import com.rangers.soccergo.model.User;
 
 
 public class SessionTest {
@@ -97,6 +100,22 @@ public class SessionTest {
 		for(int i=0;list!=null && i<list.size();i++){
 			System.out.println(list.get(i));
 		}
+	}
+	@Test
+	public void testRole(){
+		CloudSession session = new CloudSession();
+		List<User> list = (List<User> )session.get(new User());
+		//System.out.println(list.get(0).getClass());
+	}
+	@Test
+	public void testJson(){
+		User u = new User();
+		u.setObjectId("123");
+		String json = JsonUtil.getInstance().obj2json(u);
+		System.out.println(json);
+		CloudSession session = new CloudSession();
+		u = (User)session.get(User.class, "552e869ae4b0643b70a319c6");
+		System.out.println(u);
 	}
 }
 
