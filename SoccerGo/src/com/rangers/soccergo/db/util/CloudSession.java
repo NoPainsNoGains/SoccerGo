@@ -1,42 +1,55 @@
 package com.rangers.soccergo.db.util;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.springframework.stereotype.Component;
 
 
 
 
-@Component("session")
+
+
 public class CloudSession {
 	private static URIBuilder uriBuilder = new URIBuilder();
 	private static URI uri;
 	private static String uriPath = "/1.1/classes/";
-	static{		
-				
+	private static Map<String,String> classMap = new Hashtable<String, String>();
+	static{
+		classMap.put("User", "users");
+		classMap.put("Role", "roles");
 	}
 	private <T> void init(T t){
-		String path = StringUtil.getClassName(t.getClass().toString());
-		path = uriPath + path;
+		String path = StringUtil.getClassName(t.getClass().toString());	
+		if(classMap.get(path) == null){
+			path = uriPath + path;
+		}else{
+			path = "/1.1/" + classMap.get(path);
+		}
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
 			.setHost("leancloud.cn")
 			.setPort(443)
 			.setPath(path).build();
-		} catch (URISyntaxException e) {
-			
+		} catch (URISyntaxException e) {			
 			e.printStackTrace();
 		} 	
 		System.out.println("uri 地址： "+uri);
 	}
 	private <T> void init(T t,Serializable id){
 		String path = StringUtil.getClassName(t.toString());
-		path = uriPath + path +"/"+ id;
+		if(classMap.get(path) == null){
+			path = uriPath + path + "/" + id;
+		}else{
+			path = "/1.1/" + classMap.get(path) + "/" + id;
+		}
+		//path = uriPath + path +"/"+ id;
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
@@ -65,7 +78,36 @@ public class CloudSession {
 		this.save(t);
 	}
 	
+	/*
+	 * 根据id进行更新
+	 * 实体类中必须有getObjectId方法
+	 * 
+	 */
+	public <T> void update(T t,Serializable id){
+		try {
+			Method m = t.getClass().getMethod("getObjectId", null);
+			//得到id
+			String s = (String) m.invoke(t,null);		
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	//按照id查询
+	@SuppressWarnings("rawtypes")
 	public Object get(Class entity,Serializable id){
 		init(entity,id);
 		String res = HttpClientUtil.getInstance().sendGetRequest(uri);
@@ -82,11 +124,12 @@ public class CloudSession {
 	public <T> List<T> get(T t){
 		init(t);
 		String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-		//System.out.println(res);		
+		System.out.println(res);		
 		if(res == null || res.equals("")||res.equals("{\"results\":[]}")){
 			return null;
 		}
 		else{
+			@SuppressWarnings("unchecked")
 			JsonResult<T> jr = (JsonResult<T>) JsonUtil.getInstance().json2obj(res, JsonResult.class);		
 			return jr.getResults();
 		}	
@@ -103,6 +146,7 @@ public class CloudSession {
 	public <T> void delete(T t){
 		//将实体转化为json格式
 		String json = JsonUtil.getInstance().obj2json(t);
+		@SuppressWarnings("unchecked")
 		Map<String,String> map = (Map<String, String>) JsonUtil.getInstance().json2obj(json, Map.class);
 		String id = map.get("objectId");
 		System.out.println(id);
