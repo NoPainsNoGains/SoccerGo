@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -121,17 +122,19 @@ public class CloudSession {
 	}
 	//查询整个表  
 	//返回 null 表示 表中没有值或失败
+	@SuppressWarnings("unchecked")
 	public <T> List<T> get(T t){
 		init(t);
 		String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-		System.out.println(res);		
+		//System.out.println(res);		
 		if(res == null || res.equals("")||res.equals("{\"results\":[]}")){
 			return null;
 		}
 		else{
-			@SuppressWarnings("unchecked")
-			JsonResult<T> jr = (JsonResult<T>) JsonUtil.getInstance().json2obj(res, JsonResult.class);		
-			return jr.getResults();
+			res = res.substring(res.indexOf(":")+1, res.length()-1);
+			System.out.println(res);
+			return JsonUtil.getInstance().json2list(res,t.getClass());
+			
 		}	
 	}
 	//执行cql语句

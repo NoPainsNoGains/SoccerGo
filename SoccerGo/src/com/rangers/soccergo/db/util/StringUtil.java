@@ -49,4 +49,15 @@ public class StringUtil {
 		sb.append("]");
 		return sb.toString();
 	}
+	public static Class String2clz(String str){
+		Class entity = null;
+		try {
+			entity = Class.forName("com.rangers.soccergo.model."+str);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return entity;
+	}
+	
 }

@@ -1,14 +1,19 @@
 package com.rangers.soccergo.model;
 
 import java.util.Date;
+import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class Module {
 	private String objectId;
 	private Date createdAt;
 	private Date updatedAt;
 	private String module_name;
 	private int status;
-	private Module father_id;
+	private HashMap<String, String> father_id;
 	private String remark;
 	private String page;
 	private String module_code;
@@ -43,10 +48,10 @@ public class Module {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	public Module getFather_id() {
+	public HashMap<String, String> getFather_id() {
 		return father_id;
 	}
-	public void setFather_id(Module father_id) {
+	public void setFather_id(HashMap<String, String> father_id) {
 		this.father_id = father_id;
 	}
 	public String getRemark() {
