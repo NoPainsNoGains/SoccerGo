@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript">
 		function addTeacher(){
 			var form = document.forms[0];
-			form.action="/mvc03/Teacher/add.action";
+			form.action="/SoccerGo/Teacher/add.action";
 			form.method="post";
 			form.submit();
 		}
