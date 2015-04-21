@@ -67,6 +67,7 @@ public class JsonUtil {
 	public  Object json2obj(String json,Class<?> clz ){
 		try {
 			mapper = getMapper();
+		
 			return mapper.readValue(json, clz);			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
