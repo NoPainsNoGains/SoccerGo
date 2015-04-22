@@ -3,23 +3,23 @@ package com.rangers.soccergo.model;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_DEFAULT)
 public class Module {
 	private String objectId;
 	private Date createdAt;
 	private Date updatedAt;
 	private String module_name;
 	private int status;
-	private Module father_id;
+	//private Module father_id;
+	private HashMap<String,Object> father_id;
 	private String remark;
 	private String page;
 	private String module_code;
 	private boolean isCatalogue;
-	private String __type;
-	private String className;
 	public String getObjectId() {
 		return objectId;
 	}
@@ -51,24 +51,12 @@ public class Module {
 		this.status = status;
 	}
 	
-	public Module getFather_id() {
+	/*public Module getFather_id() {
 		return father_id;
 	}
 	public void setFather_id(Module father_id) {
 		this.father_id = father_id;
-	}
-	public String get__type() {
-		return __type;
-	}
-	public void set__type(String __type) {
-		this.__type = __type;
-	}
-	public String getClassName() {
-		return className;
-	}
-	public void setClassName(String className) {
-		this.className = className;
-	}
+	}*/
 	public String getRemark() {
 		return remark;
 	}
@@ -93,13 +81,21 @@ public class Module {
 	public void setCatalogue(boolean isCatalogue) {
 		this.isCatalogue = isCatalogue;
 	}
+	
+	public HashMap<String, Object> getFather_id() {
+		return father_id;
+	}
+	public void setFather_id(HashMap<String, Object> father_id) {
+		this.father_id = father_id;
+	}
 	@Override
 	public String toString() {
 		return "Module [objectId=" + objectId + ", createdAt=" + createdAt
 				+ ", updatedAt=" + updatedAt + ", module_name=" + module_name
 				+ ", status=" + status + ", father_id=" + father_id
 				+ ", remark=" + remark + ", page=" + page + ", module_code="
-				+ module_code + ", isCataogue=" + isCatalogue + "]";
+				+ module_code + ", isCatalogue=" + isCatalogue + "]";
 	}
+	
 	
 }

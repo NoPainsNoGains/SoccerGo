@@ -36,16 +36,12 @@ public class SessionTest {
 	@Test
 	public void testGetById(){
 		CloudSession session = new CloudSession();
-		Student ss = new Student("小明","20141001");
-		session.save(ss);
-		Student s = (Student)session.get(Student.class, "552b6947e4b01e374f9db67c");
+		Student s = (Student)session.get(Student.class, "55361440e4b05ce832bacd09");
 		System.out.println(s);
-		if(s == null){
-			System.out.println("qwer");
-		}
-		/*String json="{}";
-		User u = (User)JsonUtil.getInstance().json2obj(json, User.class);
-		System.out.println(u);*/
+		s.setIdCard("20150422");
+		
+		session.update(s, "");
+		
 	}
 	@Test
 	public void testGet(){
@@ -158,8 +154,7 @@ public class SessionTest {
         System.out.println(json);
         @SuppressWarnings("unchecked")
 		List<Student> list = JsonUtil.getInstance().json2list(json,Student.class);
-        System.out.println(list.get(0));
-        
+        System.out.println(list.get(0));        
 	}
 }
 

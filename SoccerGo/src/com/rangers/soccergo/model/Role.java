@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -19,10 +20,12 @@ public class Role {
 		map.put("write", true);
 		test.put("*",map);
 	}
+	@JsonIgnore
 	private Date createdAt;
+	@JsonIgnore
 	private Date updatedAt;
 	private String name;
-	private Map<String, String> users;
+	private Map<String, Object> users;
 	private Map<String, String> roles;
 	
 	public String getObjectId() {
@@ -50,10 +53,10 @@ public class Role {
 		this.name = name;
 	}
 	
-	public Map<String, String> getUsers() {
+	public Map<String, Object> getUsers() {
 		return users;
 	}
-	public void setUsers(Map<String, String> users) {
+	public void setUsers(Map<String, Object> users) {
 		this.users = users;
 	}
 	public Map<String, String> getRoles() {

@@ -1,29 +1,28 @@
 package com.rangers.soccergo.model;
 
 import java.util.Date;
+import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_DEFAULT)
 public class User {
 	/*系统默认字段*/
-	private String objectId;
-	private Date createdAt;
+	private String objectId;	
+	private Date createdAt;	
 	private Date updatedAt;
     private String username;
+    private String password;
     private boolean emailVerified;
     private boolean mobilePhoneVerified;  
     private String mobilePhoneNumber;
     private String email;
+    @JsonIgnore
     private String authData;
+    private HashMap<String,Object> avatar;
     /*end*/
-     
-    public String getAuthData() {
-		return authData;
-	}
-	public void setAuthData(String authData) {
-		this.authData = authData;
-	}
+   
 	/*自定义字段*/
     private int prefered_role;  //擅长位置
     private String nickname;    //昵称
@@ -102,16 +101,37 @@ public class User {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}  
+    public String getAuthData() {
+		return authData;
+	}
+	public void setAuthData(String authData) {
+		this.authData = authData;
+	}
+	
+	public HashMap<String, Object> getAvatar() {
+		return avatar;
+	}
+	public void setAvatar(HashMap<String, Object> avatar) {
+		this.avatar = avatar;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	@Override
 	public String toString() {
 		return "User [objectId=" + objectId + ", createdAt=" + createdAt
 				+ ", updatedAt=" + updatedAt + ", username=" + username
-				+ ", emailVerified=" + emailVerified + ", mobilePhoneVerified="
-				+ mobilePhoneVerified + ", mobilePhoneNumber="
-				+ mobilePhoneNumber + ", email=" + email + ", authData="
-				+ authData + ", prefered_role=" + prefered_role + ", nickname="
-				+ nickname + ", points=" + points + ", level=" + level + "]";
+				+ ", password=" + password + ", emailVerified=" + emailVerified
+				+ ", mobilePhoneVerified=" + mobilePhoneVerified
+				+ ", mobilePhoneNumber=" + mobilePhoneNumber + ", email="
+				+ email + ", authData=" + authData + ", avatar=" + avatar
+				+ ", prefered_role=" + prefered_role + ", nickname=" + nickname
+				+ ", points=" + points + ", level=" + level + "]";
 	}
 	
     

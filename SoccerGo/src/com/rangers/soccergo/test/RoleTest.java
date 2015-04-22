@@ -19,8 +19,9 @@ public class RoleTest {
 		CloudSession session = new CloudSession();
 		//Role r = (Role)session.get(Role.class, "552f2157e4b0643b70a6028b");
 		//System.out.println(r);
-		String cql = "select * from _User where related users to pointer('_Role','552f2157e4b0643b70a6028b')";
+		String cql = "select * from _User where related users to pointer('_Role',?)";
 		CloudQuery query = session.executeQuery(cql);
+		query.setParam(0, "552f2157e4b0643b70a6028b");
 		List<User> list = query.list();
 		for(int i=0;list!=null&&i<list.size();i++){
 			//System.out.println(list.get(i)[0]);
