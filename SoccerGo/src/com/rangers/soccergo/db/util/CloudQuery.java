@@ -44,7 +44,7 @@ public class CloudQuery {
 					            .setParameter("pvalues",formatParams(params)).build();
 			System.out.println("uri 地址："+uri);
 			String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-			//System.out.println(res);
+			System.out.println(res);
 			if(res == null || res.equals("")||res.equals("{\"results\":[]}")){
 				return null;
 			}
@@ -57,12 +57,15 @@ public class CloudQuery {
 				int index = findBystr(cql);
 				Class entity = null;
 				if(index != -1){
-					if(cqls[index-1].equals("*")){
+					if(cqls[index-1].contains("*")){
 						entity = StringUtil.String2clz(cqls[index+1]);
 					}
 					else{
 						entity = Map.class;
 					}
+				}else{
+					System.err.println("CQL 语句 语法错误");
+					throw new ArrayIndexOutOfBoundsException("CQL 语句 语法错误");
 				}
 				return JsonUtil.getInstance().json2list(res,entity);				
 			}
@@ -81,7 +84,7 @@ public class CloudQuery {
 			return -1;
 		cqls = cql.split(" ");
 		for(int i=0;i<cqls.length;i++){
-			if(cqls[i].equals("from")){
+			if(cqls[i].equals("from") || cqls[i].equals("FROM")){
 				return i;
 			}
 		}

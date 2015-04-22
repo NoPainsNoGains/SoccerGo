@@ -16,10 +16,13 @@ import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * 
@@ -54,7 +57,19 @@ public class JsonUtil<T> {
 			jf = new JsonFactory();
 		return jf;
 	}
-	
+	public static String toACL() {
+		ObjectNode root = new ObjectNode(new JsonNodeFactory(true));
+		root.with("*").put("read", true).put("write", true);
+		String json = "";
+		try {
+			 mapper = getMapper();
+			 json =mapper.writeValueAsString(root);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
 	public  String obj2json(Object obj){
 		JsonGenerator jg = null;
 		StringWriter out = new StringWriter();
