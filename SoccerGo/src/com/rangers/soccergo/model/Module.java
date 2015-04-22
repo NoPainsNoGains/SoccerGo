@@ -1,7 +1,12 @@
 package com.rangers.soccergo.model;
 
 import java.util.Date;
+import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class Module {
 	private String objectId;
 	private Date createdAt;
@@ -12,7 +17,9 @@ public class Module {
 	private String remark;
 	private String page;
 	private String module_code;
-	private boolean isCataogue;
+	private boolean isCatalogue;
+	private String __type;
+	private String className;
 	public String getObjectId() {
 		return objectId;
 	}
@@ -43,11 +50,24 @@ public class Module {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	
 	public Module getFather_id() {
 		return father_id;
 	}
 	public void setFather_id(Module father_id) {
 		this.father_id = father_id;
+	}
+	public String get__type() {
+		return __type;
+	}
+	public void set__type(String __type) {
+		this.__type = __type;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
 	}
 	public String getRemark() {
 		return remark;
@@ -67,11 +87,11 @@ public class Module {
 	public void setModule_code(String module_code) {
 		this.module_code = module_code;
 	}
-	public boolean isCataogue() {
-		return isCataogue;
+	public boolean isIsCatalogue() {
+		return isCatalogue;
 	}
-	public void setCataogue(boolean isCataogue) {
-		this.isCataogue = isCataogue;
+	public void setCatalogue(boolean isCatalogue) {
+		this.isCatalogue = isCatalogue;
 	}
 	@Override
 	public String toString() {
@@ -79,7 +99,7 @@ public class Module {
 				+ ", updatedAt=" + updatedAt + ", module_name=" + module_name
 				+ ", status=" + status + ", father_id=" + father_id
 				+ ", remark=" + remark + ", page=" + page + ", module_code="
-				+ module_code + ", isCataogue=" + isCataogue + "]";
+				+ module_code + ", isCataogue=" + isCatalogue + "]";
 	}
 	
 }

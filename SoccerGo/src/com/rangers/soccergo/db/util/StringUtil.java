@@ -1,5 +1,14 @@
 package com.rangers.soccergo.db.util;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class StringUtil {
+	private static Map<String,String> map = new HashMap<String, String>();
+	static{
+		map.put("_User", "User");
+		map.put("_Role", "Role");
+	}
 	//根据类字符串得到类名
 	public static String getClassName(String claz){
 		String temp = "";
@@ -49,4 +58,18 @@ public class StringUtil {
 		sb.append("]");
 		return sb.toString();
 	}
+	public static Class String2clz(String str){
+		Class entity = null;
+		if(map.get(str)!=null){
+			str = map.get(str);
+		}
+		try {
+			entity = Class.forName("com.rangers.soccergo.model."+str);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return entity;
+	}
+	
 }

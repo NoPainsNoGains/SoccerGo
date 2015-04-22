@@ -1,16 +1,21 @@
 package com.rangers.soccergo.db.util;
+import java.lang.reflect.ParameterizedType;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.utils.URIBuilder;
+
+import com.rangers.soccergo.model.Student;
 
 
 public class CloudQuery {
 	private String cql;
 	private Object[] params;
 	private URIBuilder uriBuilder;
-	
+	private String[] cqls;
 	public CloudQuery() {
 		super();
 	}
@@ -32,6 +37,7 @@ public class CloudQuery {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T> List<T> list(){
 		try {
 			URI uri = uriBuilder.setParameter("cql", cql)
@@ -43,8 +49,25 @@ public class CloudQuery {
 				return null;
 			}
 			else{
-				JsonResult<T> jr = (JsonResult<T>) JsonUtil.getInstance().json2obj(res, JsonResult.class);		
-				return jr.getResults();
+				//JsonResult<T> jr = (JsonResult<T>) JsonUtil.getInstance().json2obj(res, JsonResult.class);		
+				//return jr.getResults();
+				res = res.substring(res.indexOf("["), res.indexOf("]")+1);
+				System.out.println(res);
+				//T[] t = (T[]) JsonUtil.getInstance().json2obj(res, T[].class);
+				int index = findBystr(cql);
+				Class entity = null;
+				if(index != -1){
+					if(cqls[index-1].contains("*")){
+						entity = StringUtil.String2clz(cqls[index+1]);
+					}
+					else{
+						entity = Map.class;
+					}
+				}else{
+					System.err.println("CQL 语句 语法错误");
+					throw new ArrayIndexOutOfBoundsException("CQL 语句 语法错误");
+				}
+				return JsonUtil.getInstance().json2list(res,entity);				
 			}
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
@@ -53,7 +76,18 @@ public class CloudQuery {
 		return null;
 	}
 	private String formatParams(Object[] objects){
-		System.out.println(StringUtil.paramsToString(objects));
+		//System.out.println(StringUtil.paramsToString(objects));
 		return StringUtil.paramsToString(objects);
+	}
+	private int findBystr(String cql){
+		if(cql == null && cql.equals(""))
+			return -1;
+		cqls = cql.split(" ");
+		for(int i=0;i<cqls.length;i++){
+			if(cqls[i].equals("from") || cqls[i].equals("FROM")){
+				return i;
+			}
+		}
+		return -1;
 	}
 }

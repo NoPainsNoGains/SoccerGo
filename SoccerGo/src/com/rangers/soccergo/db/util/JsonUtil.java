@@ -6,6 +6,7 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -15,15 +16,22 @@ import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * 
  * 单例的实现
  * @author 321
+ * @param <T>
  *
  */
-public class JsonUtil {
+public class JsonUtil<T> {
 	private static JsonUtil ju;
 	private static JsonFactory jf;
 	private static ObjectMapper mapper;
@@ -49,7 +57,19 @@ public class JsonUtil {
 			jf = new JsonFactory();
 		return jf;
 	}
-	
+	public static String toACL() {
+		ObjectNode root = new ObjectNode(new JsonNodeFactory(true));
+		root.with("*").put("read", true).put("write", true);
+		String json = "";
+		try {
+			 mapper = getMapper();
+			 json =mapper.writeValueAsString(root);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
 	public  String obj2json(Object obj){
 		JsonGenerator jg = null;
 		StringWriter out = new StringWriter();
@@ -75,6 +95,39 @@ public class JsonUtil {
 		}
 		return null;
 	}
+	
+	public List<T> json2list(String json,Class clz){
+		try {
+			mapper = getMapper();
+			mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+			/*return mapper.readValue(json,new TypeReference<List<clz>>() {
+			});	*/
+			//泛型
+			JavaType javaType = mapper.getTypeFactory().constructParametricType(List.class,clz);
+			return mapper.readValue(json, javaType);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public T[] json2Array(String json,Class<?> clz){
+		try {
+			mapper = getMapper();
+			//mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+			/*return mapper.readValue(json,new TypeReference<List<clz>>() {
+			});	*/
+			//泛型
+			JavaType javaType = mapper.getTypeFactory().constructParametricType(List.class,clz);
+			return mapper.readValue(json, javaType);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/*edit by ymh*/
 	public static String string2json(String s) {
 		if (s == null)
