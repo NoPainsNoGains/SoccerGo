@@ -37,7 +37,7 @@ public class ModuleDaoTest {
 		System.out.println(m);
 		String json = JsonUtil.getInstance().obj2json(m);
 		System.out.println(json);
-		//moduleDao.update(m);
+		moduleDao.update(m);
 	}
 	@Test
 	public void testdelete() {
