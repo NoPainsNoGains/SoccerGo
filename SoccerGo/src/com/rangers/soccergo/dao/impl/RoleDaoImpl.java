@@ -145,4 +145,13 @@ public class RoleDaoImpl implements RoleDao {
 	public void deleteRole(Role role) {	
 		session.delete(role);
 	}
+	/*
+     * 
+     * 得到role的个数
+     */	
+	public int count() {
+		String cql = "select count(*) from _Role";
+		CloudQuery query = session.executeQuery(cql);
+		return (Integer) query.exeResult("count");		
+	}
 }
