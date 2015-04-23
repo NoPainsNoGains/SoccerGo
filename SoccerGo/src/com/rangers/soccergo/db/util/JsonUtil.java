@@ -4,9 +4,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringWriter;
-import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -14,10 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -289,5 +289,14 @@ public class JsonUtil<T> {
 		}
 		
 		return json.toString();
+	}
+	/*
+	 * json数组转换成json对象数组 返回第一个json对象
+	 * */
+	public static JSONObject jsonToJsonObject(String models){
+		JSONArray array = JSONArray.fromObject(models);//先读取串数组
+		Object[] o = array.toArray();                //转成对像数组        
+		JSONObject obj = JSONObject.fromObject(o[0]);//再使用JsonObject遍历一个个的对像
+		return obj;
 	}
 }

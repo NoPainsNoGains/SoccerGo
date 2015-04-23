@@ -9,42 +9,32 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>用户管理</title>
-
-		<link
-			href="../../plugins/kendoui/examples/content/shared/styles/examples-offline.css"
-			rel="stylesheet">
-		<link href="../../plugins/kendoui/styles/kendo.common.min.css"
-			rel="stylesheet">
-		<link href="../../plugins/kendoui/styles/kendo.default.min.css"
-			rel="stylesheet">
-
-		<script src="../../plugins/kendoui/js/jquery.min.js">
-</script>
-		<script src="../../plugins/kendoui/js/kendo.web.min.js">
-</script>
-		<script src="../../plugins/kendoui/js/kendo.messages.zh-CN.js">
-</script>
-		<script
-			src="../../plugins/kendoui/examples/content/shared/js/console.js">
-</script>
+		<title>职务管理</title>
+		<link href="../../plugins/kendo/examples/content/shared/styles/examples-offline.css" rel="stylesheet">
+		<link href="../../plugins/kendo/styles/kendo.common.min.css" rel="stylesheet">
+		<link href="../../plugins/kendo/styles/kendo.default.min.css" rel="stylesheet">
+		<script src="../../plugins/kendo/js/jquery.min.js"></script>
+		<script src="../../plugins/kendo/js/kendo.web.min.js"></script>
+		<script src="../../plugins/kendo/js/kendo.messages.zh-CN.js"></script>
+		<script src="../../plugins/kendo/examples/content/shared/js/console.js"></script>
 	</head>
 	<body>
 		<div id="grid"></div>
 		<script>
-var record = 0;
-$(document).ready(function () {	
+			var record = 0;
+			var selectedItem=undefined;   
+			$(document).ready(function () {	
             	var dataSource = new kendo.data.DataSource({
                     transport : {
                         read : {
                             type : "post",
-                            url : "../../admin/systemManage/user_list.action",
+                            url : "/SoccerGo/admin/SystemManage/RoleManager/list.action",
                             dataType : "json"
                         },
-                        update : {
-                        	type : "post",
-                        	url : "../../admin/systemManage/user_update.action",
-                        	dataType : "json"
+                        create: {
+                        	 type : "post",
+                             url : "/SoccerGo/admin/SystemManage/RoleManager/add.action",
+                             dataType : "json"
                         },
                         parameterMap : function(options, operation) {   
                         	if (operation == "read"){
@@ -61,12 +51,11 @@ $(document).ready(function () {
                     pageSize:5,
                     schema : {
                     	 model: {
-                             id: "userId",
+                             id: "objectId",
                              fields: {
-                                userName: { validation: { required: true } },
-                                userPassword: { validation: { required: true } },
-                                createDate: { validation: { required: true } },
-                                academy: { validation: { required: true } },
+                                name: { validation: { required: true } }/* ,
+                                createdAt: { validation: { required: false }, },
+                                updatedAt: { validation: { required: false } } */
                              }
                         },
                         data : function(json) {
@@ -94,7 +83,7 @@ $(document).ready(function () {
                             display : "{0} - {1} 共 {2} 条数据",
                             empty : "没有数据",
                             page : "Page",
-                            of : "of {0}", // {0} is total amount of pages
+                            of : "of {0}",
                             itemsPerPage : "条每页",
                             first : "首页",
                             previous : "前一页",
@@ -104,116 +93,73 @@ $(document).ready(function () {
                         }
                     },
                     height: 430,
-                    toolbar: [{
-						template: "<a class='k-button' onclick='createUser()'><span  class='k-icon k-i-plus'></span>创建用户</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
-					}],
+                    toolbar: [{ name: "create", text: "创建角色" }],
                     selectable:"row",
                     columns: [
-                    		  {title: "序号",template: "#= ++record #",width: 50}, 
-                              { field: "userName", title: "用户名"},
-                              { field: "userPassWord", title: "用户密码"},
-                              { field: "userCreateDate", title: "创建时间"},
-                              { field: "academy.academyName", title: "所在学院" },
+                    		  {title: "序号",template: "#= ++record #",width: 100}, 
+                              { field: "name", title: "职务"},
+                              { field: "createdAt", title: "创建时间"},
+                              { field: "updatedAt", title: "更新时间"},
                               { command: [{
-							                name: "edit",
-							                text: { 
-							                    edit: "编辑",
-							                    update: "更新",
-							                    cancel: "取消"
-							                }
-							             }
-							        ],
-							        title: "操作",
-							        width: "160px"
-							   }
+							                 name: "start",
+							                 text: "删除",
+							                 click:deleteRole
+							              }],
+							      title: "操作",
+							      width: "200px"   
+							 }   
 							],
+					  edit: function (e) {        	
+	                     var editWindow = e.container.data("kendoWindow");  
+		                if (e.model.isNew()) {  
+		                    editWindow.title('创建角色');
+		                     $("a.k-grid-update")[0].innerHTML="保存";
+	                    	 $("a.k-grid-cancel")[0].innerHTML="取消";
+	                    	 e.container.find('.k-grid-update,.k-grid-cancel').css('float','right');
+	                    	 e.container.find(".k-grid-update").insertAfter(".k-grid-cancel");
+		                       
+		                } 
+           			 },
            			 dataBinding: function() {
    						 record = (this.dataSource.page() -1) * this.dataSource.pageSize();
  					 },
-           			 editable: "popup"
+ 					 change:function(e){
+           			 		var grid = $("#grid").data("kendoGrid");
+							selectedItem = grid.dataItem(grid.select());	
+           			 },
+           			 cancel:function(){
+           			 	selectedItem=undefined;
+						rowIndex=undefined;
+						$('#grid').data('kendoGrid').dataSource.read();
+		   	  			$('#grid').data('kendoGrid').refresh();	
+           			 },
+           			 editable: {
+	                    mode: "popup",
+	                	template: kendo.template($("#popup-editor").html())
+  					}
+           			 
           	  });
-				var windowAdd = $("#windowAdd");
-					if (!windowAdd.data("kendoWindow")) {
-						windowAdd = windowAdd.kendoWindow({	
-							draggable: true,
-							modal: true,          
-							resizable: true,
-							visible: false,
-							title: "创建用户"
-					});
-				}
+				
             });	 
 		   function dataSource_requestEnd(e) {
-			    
-				if (e.type == "create" || e.type == "update") {
+				if (e.type == "create" || e.type == "destory") {
 			        if (e.response == null || e.response.Errors == null) {
 			            $('#grid').data('kendoGrid').dataSource.read();
 						$('#grid').data('kendoGrid').refresh();
 			        }
   				 }
-		    } 
-		    function createUser(){
-		    	var windowAdd = $("#windowAdd");
-           		windowAdd.data("kendoWindow").open();
-           		windowAdd.data("kendoWindow").center();
 		    }
-		    function createSave(){
-		    	$.ajax({
-			        cache: true,
-			        type: "POST",
-			        url:"../../admin/systemManage/user_add.action",
-			        data:$('#add_user').serialize(),
-			        async: false,
-			        dataType: "json",
-			        success: function(flag) {
-			         	if(flag==0){
-			         		alert("插入成功!");
-			         		var windows = $("#windowAdd");
-					    	windows.data("kendoWindow").close();
-					    	var gview = $("#grid").data("kendoGrid");
-							gview.dataSource.read();
-			         	}
-			         	if(flag==1){
-			         		alert("该用户名已存在");
-			         	}
-			        }
-			    }); 
-		    }
-		    function createCancel(){
-		    
+		    function deleteRole(){
+			    if(selectedItem!=undefined){
+			   		var objectId = selectedItem.objectId;
+		    		alert(objectId);
+			    }
 		    }
           </script>
-		<div id="windowAdd" style="display: none; width: 300px;">
-			<form id="add_user">
-				<p>
-					<label style="margin-left: 40px;">
-						用户名:
-					</label>
-					<input name="userName" style="margin-left: 38px; width: 120px;" />
-				</p>
-				<br>
-				<p>
-					<label style="margin-left: 40px;">
-						用户密码:
-					</label>
-					<input name="userPassWord"
-						style="margin-left: 28px; width: 120px;" />
-				</p>
-
-				<br>
-				<p>
-					<label style="margin-left: 40px;">
-						所在学院:
-					</label>
-					<input name="academy.academyName" style="margin-left: 28px; width: 120px;" />
-				</p>
-				<br>
-		
-				<div style="float: right;">
-					<a class='k-button' onclick='createSave()'>确定</a>&nbsp&nbsp
-					<a class='k-button' onclick='createCancel()'>取消</a>
-				</div>
-			</form>
-		</div>
+		<script id="popup-editor" type="text/x-kendo-template"> 
+  				<p>
+   					<label style="margin-left:40px;">角色名: <input data-bind="value:name" style="width: 200px;" class="k-textbox" placeholder="必须填写角色名" required validationMessage="不能为空"/></label>
+ 				</p>
+		</script>
 	</body>
 </html>

@@ -127,14 +127,12 @@ public class CloudSession {
 	@SuppressWarnings("unchecked")
 	public <T> List<T> get(T t){
 		init(t);
-		String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-		//System.out.println(res);		
+		String res = HttpClientUtil.getInstance().sendGetRequest(uri);	
 		if(res == null || res.equals("")||res.equals("{\"results\":[]}")){
 			return null;
 		}
 		else{
 			res = res.substring(res.indexOf(":")+1, res.length()-1);
-			System.out.println(res);
 			return JsonUtil.getInstance().json2list(res,t.getClass());
 			
 		}	

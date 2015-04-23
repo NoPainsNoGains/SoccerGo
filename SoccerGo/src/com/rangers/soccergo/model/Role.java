@@ -20,9 +20,7 @@ public class Role {
 		map.put("write", true);
 		test.put("*",map);
 	}
-	@JsonIgnore
 	private Date createdAt;
-	@JsonIgnore
 	private Date updatedAt;
 	private String name;
 	private Map<String, Object> users;

@@ -7,13 +7,12 @@ import org.springframework.stereotype.Component;
 import com.rangers.soccergo.model.Role;
 @Component("rolePage")
 public class RolePage {
-	private List<Role> rows;
+	private List<RoleVo> rows;
 	private int total;
-	
-	public List<Role> getRows() {
+	public List<RoleVo> getRows() {
 		return rows;
 	}
-	public void setRows(List<Role> rows) {
+	public void setRows(List<RoleVo> rows) {
 		this.rows = rows;
 	}
 	public int getTotal() {
@@ -22,4 +21,5 @@ public class RolePage {
 	public void setTotal(int total) {
 		this.total = total;
 	}
+	
 }
