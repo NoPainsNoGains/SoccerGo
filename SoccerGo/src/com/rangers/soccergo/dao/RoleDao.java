@@ -15,4 +15,5 @@ public interface RoleDao {
 	void deleteUser(Role role,User u);
 	void deleteUsers(Role role,List<User> list);
 	void deleteRole(Role role);
+	int count();
 }

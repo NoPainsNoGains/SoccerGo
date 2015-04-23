@@ -3,6 +3,7 @@ import java.lang.reflect.ParameterizedType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class CloudQuery {
 					            .setParameter("pvalues",formatParams(params)).build();
 			System.out.println("uri 地址："+uri);
 			String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-			//System.out.println(res);
+			System.out.println(res);
 			if(res == null || res.equals("")||res.equals("{\"results\":[]}")){
 				return null;
 			}
@@ -86,5 +87,26 @@ public class CloudQuery {
 			}
 		}
 		return -1;
+	}
+	
+	public Object exeResult(String key){
+		try {
+			URI uri = uriBuilder.setParameter("cql", cql)
+					            .setParameter("pvalues",formatParams(params)).build();
+			System.out.println("uri 地址："+uri);
+			String res = HttpClientUtil.getInstance().sendGetRequest(uri);
+			System.out.println(res);
+			HashMap<String, Object> map = (HashMap<String, Object>) JsonUtil.getInstance().json2obj(res, Map.class);
+			if(map.containsKey(key))
+			     return map.get(key);
+			else{
+				return null;
+			}
+			
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
