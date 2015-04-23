@@ -44,16 +44,13 @@ public class CloudQuery {
 					            .setParameter("pvalues",formatParams(params)).build();
 			System.out.println("uri 地址："+uri);
 			String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-			System.out.println(res);
+			//System.out.println(res);
 			if(res == null || res.equals("")||res.equals("{\"results\":[]}")){
 				return null;
 			}
 			else{
-				//JsonResult<T> jr = (JsonResult<T>) JsonUtil.getInstance().json2obj(res, JsonResult.class);		
-				//return jr.getResults();
 				res = res.substring(res.indexOf("["), res.indexOf("]")+1);
 				System.out.println(res);
-				//T[] t = (T[]) JsonUtil.getInstance().json2obj(res, T[].class);
 				int index = findBystr(cql);
 				Class entity = null;
 				if(index != -1){

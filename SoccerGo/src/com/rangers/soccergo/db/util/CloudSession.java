@@ -85,10 +85,12 @@ public class CloudSession {
 	 * 
 	 */
 	public <T> void update(T t,Serializable id){
+		//反射机制 得到ID
 		try {
 			Method m = t.getClass().getMethod("getObjectId", null);
 			//得到id
-			String s = (String) m.invoke(t,null);		
+			String s = (String) m.invoke(t,null);
+			init(t.getClass(),s);
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,6 +107,9 @@ public class CloudSession {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String json = JsonUtil.getInstance().obj2json(t);
+		HttpClientUtil.getInstance().sendPutRequest(uri,json);
+		
 	}
 	
 	//按照id查询
@@ -149,10 +154,11 @@ public class CloudSession {
 	public <T> void delete(T t){
 		//将实体转化为json格式
 		String json = JsonUtil.getInstance().obj2json(t);
+		//利用json得到id
 		@SuppressWarnings("unchecked")
 		Map<String,String> map = (Map<String, String>) JsonUtil.getInstance().json2obj(json, Map.class);
 		String id = map.get("objectId");
-		System.out.println(id);
+		//System.out.println(id);
 		//初始化uri
 		init(t.getClass(),id);
 		HttpClientUtil.getInstance().sendDeleteRequest(uri);
