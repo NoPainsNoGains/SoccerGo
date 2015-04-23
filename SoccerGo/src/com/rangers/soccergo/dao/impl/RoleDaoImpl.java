@@ -6,20 +6,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import com.rangers.soccergo.dao.RoleDao;
 import com.rangers.soccergo.db.util.CloudQuery;
 import com.rangers.soccergo.db.util.CloudSession;
 import com.rangers.soccergo.db.util.JsonUtil;
 import com.rangers.soccergo.model.Role;
 import com.rangers.soccergo.model.User;
-
+@Component("roleDaoImpl")
 public class RoleDaoImpl implements RoleDao {
 	private CloudSession session = new CloudSession();
 	
 	public CloudSession getSession() {
 		return session;
 	}
-
+	
 	public void setSession(CloudSession session) {
 		this.session = session;
 	}
@@ -145,8 +147,7 @@ public class RoleDaoImpl implements RoleDao {
 	public void deleteRole(Role role) {	
 		session.delete(role);
 	}
-	/*
-     * 
+	/* 
      * 得到role的个数
      */	
 	public int count() {
