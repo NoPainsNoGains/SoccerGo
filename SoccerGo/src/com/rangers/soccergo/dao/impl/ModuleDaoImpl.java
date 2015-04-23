@@ -5,9 +5,11 @@ import java.util.List;
 import com.rangers.soccergo.dao.ModuleDao;
 import com.rangers.soccergo.db.util.CloudSession;
 import com.rangers.soccergo.model.Module;
+import com.rangers.soccergo.util.GenericSuperClass;
 
 public class ModuleDaoImpl implements ModuleDao {
 	private CloudSession session = new CloudSession();
+	
 	
 	public CloudSession getSession() {
 		return session;

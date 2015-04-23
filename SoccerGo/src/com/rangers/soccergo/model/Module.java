@@ -10,11 +10,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_DEFAULT)
 public class Module {
 	private String objectId;
+	@JsonIgnore
 	private Date createdAt;
+	@JsonIgnore
 	private Date updatedAt;
 	private String module_name;
 	private int status;
-	//private Module father_id;
 	private HashMap<String,Object> father_id;
 	private String remark;
 	private String page;
@@ -50,13 +51,6 @@ public class Module {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
-	/*public Module getFather_id() {
-		return father_id;
-	}
-	public void setFather_id(Module father_id) {
-		this.father_id = father_id;
-	}*/
 	public String getRemark() {
 		return remark;
 	}

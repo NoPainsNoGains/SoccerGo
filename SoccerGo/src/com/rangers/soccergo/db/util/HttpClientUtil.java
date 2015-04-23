@@ -174,7 +174,8 @@ public class HttpClientUtil {
 	                e.printStackTrace();  
 	            }  
 			}
-		
+		logger.info("删除操作完成");
+		System.out.println("删除操作完成");
 	}
 	
 	private static Header[] setHead(){
