@@ -48,7 +48,7 @@ public class JsonUtil<T> {
 	public static ObjectMapper getMapper(){
 		if(mapper == null)
 			//设置json解析Date的格式
-			mapper = new ObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));	   
+			mapper = new ObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'"));	   
 		return mapper;
 	}
 	
