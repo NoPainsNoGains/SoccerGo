@@ -36,7 +36,7 @@ public class HttpClientUtil {
 		
 	}
 	
-	public void sendPostRequest(URI uri,String json){
+	public String sendPostRequest(URI uri,String json){
 		HttpPost httpPost = new HttpPost(uri);
 		//PostMethod postMethod = new UTF8PostMethod(uri.toString());
 		
@@ -61,7 +61,11 @@ public class HttpClientUtil {
 	        	 if(res.containsKey("error")){
 	        		 System.err.println(res.get("error"));
 	        	 }
+	        	 if(res.containsKey("code")){
+	        		 return res.get("code");
+	        	 }
 	         }
+	         
 		}catch (ClientProtocolException e) {
 			logger.debug("postData Exception url: "+uri.toString());
 			// TODO Auto-generated catch block
@@ -77,7 +81,7 @@ public class HttpClientUtil {
                 e.printStackTrace();  
             }  
 		}
-       
+       return "failed";
 	}
 	
 	public String sendGetRequest(URI uri){

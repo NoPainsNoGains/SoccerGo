@@ -88,5 +88,14 @@ public class RoleDaoTest {
 		System.out.println(r);
 		roleDao.deleteRole(r);
 	}
+	@Test
+	public void testupdate(){
+		Role r = roleDao.getById("55375dcde4b0066130264c0b");
+		System.out.println(r);
+		r.setName("testupdate");
+		r.setRoles(null);r.setUsers(null);r.setCreatedAt(null);r.setTest(null);
+		r.setUpdatedAt(null);
+		roleDao.update(r);
+	}
 
 }

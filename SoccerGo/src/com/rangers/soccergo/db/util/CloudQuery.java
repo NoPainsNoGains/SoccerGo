@@ -109,4 +109,5 @@ public class CloudQuery {
 		}
 		return null;
 	}
+
 }

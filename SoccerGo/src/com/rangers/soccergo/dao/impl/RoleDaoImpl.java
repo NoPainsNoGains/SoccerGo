@@ -155,4 +155,8 @@ public class RoleDaoImpl implements RoleDao {
 		CloudQuery query = session.executeQuery(cql);
 		return (Integer) query.exeResult("count");		
 	}
+
+	public void update(Role role) {
+		session.update(role,"");
+	}
 }

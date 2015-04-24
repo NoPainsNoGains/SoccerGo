@@ -23,6 +23,7 @@ public class CommonDaoImpl<T> implements CommonDao<T> {
 	}
 
 	public void update(T t) {
+		
 		session.update(t,"");
 	}
 
