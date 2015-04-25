@@ -19,8 +19,8 @@ public class CloudSession {
 	private static String uriPath = "/1.1/classes/";
 	private static Map<String,String> classMap = new Hashtable<String, String>();
 	static{
-		classMap.put("User", "users");
-		classMap.put("Role", "roles");
+		classMap.put("_User", "users");
+		classMap.put("_Role", "roles");
 	}
 	private <T> void init(T t){
 		String path = StringUtil.getClassName(t.getClass().toString());	
@@ -63,13 +63,14 @@ public class CloudSession {
 		
 	}
 	//保存
-	public <T> void save(T t){		
+	public <T> boolean save(T t){		
 		//初始化uri
 		init(t);
 		//将实体转化为json格式
 		String json = JsonUtil.getInstance().obj2json(t);
 		//执行post方法
-		HttpClientUtil.getInstance().sendPostRequest(uri, json);		
+		String res = HttpClientUtil.getInstance().sendPostRequest(uri, json);
+		return res.equals("succeed")?true:false;
 	}
 	//更新
 	public <T> void update(T t){
@@ -81,7 +82,7 @@ public class CloudSession {
 	 * 实体类中必须有getObjectId方法
 	 * 
 	 */
-	public <T> void update(T t,Serializable id){
+	public <T> boolean update(T t,Serializable id){
 		//反射机制 得到ID
 		try {
 			Method m = t.getClass().getMethod("getObjectId", null);
@@ -105,7 +106,8 @@ public class CloudSession {
 			e.printStackTrace();
 		}
 		String json = JsonUtil.getInstance().obj2json(t);
-		HttpClientUtil.getInstance().sendPutRequest(uri,json);
+		String res = HttpClientUtil.getInstance().sendPutRequest(uri,json);
+		return res.equals("succeed")?true:false;
 		
 	}
 	
@@ -155,7 +157,6 @@ public class CloudSession {
 		@SuppressWarnings("unchecked")
 		Map<String,String> map = (Map<String, String>) JsonUtil.getInstance().json2obj(json, Map.class);
 		String id = map.get("objectId");
-		//System.out.println(id);
 		//初始化uri
 		init(t.getClass(),id);
 		HttpClientUtil.getInstance().sendDeleteRequest(uri);

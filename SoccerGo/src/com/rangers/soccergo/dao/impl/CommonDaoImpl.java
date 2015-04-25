@@ -3,13 +3,16 @@ package com.rangers.soccergo.dao.impl;
 import java.util.List;
 
 import com.rangers.soccergo.dao.CommonDao;
+import com.rangers.soccergo.db.util.CloudQuery;
 import com.rangers.soccergo.db.util.CloudSession;
+import com.rangers.soccergo.db.util.StringUtil;
 import com.rangers.soccergo.util.GenericSuperClass;
 
 public class CommonDaoImpl<T> implements CommonDao<T> {
 	
 	private CloudSession session = new CloudSession();
 	private Class entity = (Class)GenericSuperClass.getClass(this.getClass());
+	
 	public CloudSession getSession() {
 		return session;
 	}
@@ -18,13 +21,12 @@ public class CommonDaoImpl<T> implements CommonDao<T> {
 		this.session = session;
 	}
 	
-	public void save(T t) {
-		session.save(t);	
+	public boolean save(T t) {
+		return session.save(t);	
 	}
 
-	public void update(T t) {
-		
-		session.update(t,"");
+	public boolean update(T t) {	
+		return session.update(t,"");
 	}
 
 	public void delete(T t) {
@@ -51,7 +53,11 @@ public class CommonDaoImpl<T> implements CommonDao<T> {
 	}
 
 	public int count() {
-		return 0;
+		String cql = "select count(*) from ";
+		String cqlClassName = StringUtil.getClassName(entity.toString());
+		cql = cql + cqlClassName;
+		CloudQuery query = session.executeQuery(cql);
+		return (Integer) query.exeResult("count");	
 	}
 
 }

@@ -35,7 +35,17 @@ public class HttpClientUtil {
 	private HttpClientUtil(){
 		
 	}
-	
+	/**   *  
+	  * 发送http的post请求
+	  * 方法详述（简单方法可不必详述）   
+	  * @param URI uri： 发送http包的uri地址   
+	  *        String json：发送http包的实体内容
+	  * @return String "succeed" : 执行成功 leancloud中执行成功
+	  *                "failed"  : 操作失败 由异常引起的失败
+	  *                "res.get("code")":操作失败的代码编号
+	  * @throws IOException 发送http包出错 
+	  * @throws ClientProtocolException 发送http包出错  
+	 */
 	public String sendPostRequest(URI uri,String json){
 		HttpPost httpPost = new HttpPost(uri);
 		//PostMethod postMethod = new UTF8PostMethod(uri.toString());
@@ -55,6 +65,7 @@ public class HttpClientUtil {
 	         HttpEntity entity = httpResponse.getEntity();	         
 	         if(entity != null){
 	        	 String rjson = EntityUtils.toString(entity);
+	        	 //返回的对象
 	        	 System.out.println("response content:" + rjson); 	        	 
 	        	 Map<String,String> res = (Map<String, String>) JsonUtil.getInstance().json2obj(rjson, Map.class);
 	        	 //报错
@@ -62,8 +73,9 @@ public class HttpClientUtil {
 	        		 System.err.println(res.get("error"));
 	        	 }
 	        	 if(res.containsKey("code")){
-	        		 return res.get("code");
+	        		 return String.valueOf(res.get("code"));
 	        	 }
+	        	 return "succeed";
 	         }
 	         
 		}catch (ClientProtocolException e) {
@@ -120,7 +132,7 @@ public class HttpClientUtil {
 		return res;
 		
 	}
-	public void sendPutRequest(URI uri,String json){
+	public String sendPutRequest(URI uri,String json){
 		HttpPut httpPut = new HttpPut(uri);
 		httpPut.setHeaders(setHead());
 		try {
@@ -137,7 +149,17 @@ public class HttpClientUtil {
 		    HttpEntity entity = httpResponse.getEntity();	         
 		    if(entity != null){
 		        	 String rjson = EntityUtils.toString(entity);
-		        	 System.out.println("response content:" + rjson); 
+		        	 //返回的对象
+		        	 System.out.println("response content:" + rjson);
+		        	 Map<String,String> res = (Map<String, String>) JsonUtil.getInstance().json2obj(rjson, Map.class);
+		        	 //报错
+		        	 if(res.containsKey("error")){
+		        		 System.err.println(res.get("error"));
+		        	 }
+		        	 if(res.containsKey("code")){
+		        		 return res.get("code");
+		        	 }
+		        	 return "succeed";
 		    }
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -152,6 +174,7 @@ public class HttpClientUtil {
 	                e.printStackTrace();  
 	            }  
 			}
+		return "failed";
 	}
 	
 	public void sendDeleteRequest(URI uri){

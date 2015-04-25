@@ -21,8 +21,8 @@ public class RoleDaoTest {
 	public void testSave() {
 		RoleDao roleDao = new RoleDaoImpl();
 		Role r = new Role();
-		r.setName("testSave");
-		roleDao.save(r);
+		r.setName("testSave2");
+		System.out.println(roleDao.save(r));
 	}
 	@Test
 	public void testgetUsersByRoleId(){

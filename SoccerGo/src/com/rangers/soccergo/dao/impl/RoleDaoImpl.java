@@ -30,8 +30,8 @@ public class RoleDaoImpl implements RoleDao {
      * 
      * 保存角色
      */	
-	public void save(Role role) {
-		session.save(role);		
+	public Boolean save(Role role) {
+		 return session.save(role);		
 	}
 	
 	/*
@@ -155,7 +155,9 @@ public class RoleDaoImpl implements RoleDao {
 		CloudQuery query = session.executeQuery(cql);
 		return (Integer) query.exeResult("count");		
 	}
-
+	/* 
+     * 此方法有问题
+     */	
 	public void update(Role role) {
 		session.update(role,"");
 	}

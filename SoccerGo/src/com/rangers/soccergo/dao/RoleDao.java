@@ -6,7 +6,7 @@ import com.rangers.soccergo.model.Role;
 import com.rangers.soccergo.model.User;
 
 public interface RoleDao {
-	void save(Role role);
+	Boolean save(Role role);
 	void update(Role role);
 	List<User> getUsersByRoleId(String objectId);
 	List<Role> getAll();
