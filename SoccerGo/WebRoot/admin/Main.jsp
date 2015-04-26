@@ -225,11 +225,12 @@ function logout(){
 	</div>
 	<div region="west" border="true" split="true" title="菜单" class="cs-west">
 			<div class="easyui-accordion" fit="true" border="false">
-				<div title="系统管理">
-					<a href="javascript:void(0);" src="SystemManage/RoleManage.jsp" class="cs-navi-tab">职务管理</a></p>
-				</div>
-				<div title="课程管理">
+				<div title="模块管理">
 					<a href="javascript:void(0);" src="CourseManage/courseManger.jsp" class="cs-navi-tab">课程表</a></p>
+				</div>
+				<div title="用户管理">
+					<a href="javascript:void(0);" src="SystemManage/RoleManage.jsp" class="cs-navi-tab">职务管理</a></p>
+					<a href="javascript:void(0);" src="ModuleManage/ModuleShow.jsp" class="cs-navi-tab">用户管理</a></p>
 				</div>
 		</div>
 	</div>

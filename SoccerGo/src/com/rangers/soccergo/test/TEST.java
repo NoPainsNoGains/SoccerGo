@@ -11,6 +11,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.rangers.soccergo.model.Role;
 import com.rangers.soccergo.service.system.RoleManagerService;
+import com.rangers.soccergo.service.system.UserManagerService;
+import com.rangers.soccergo.vo.system.UserVo;
 
 public class TEST {
 	private ApplicationContext ac =null;
@@ -22,9 +24,15 @@ public class TEST {
 	@Test
 	public void test() throws Exception{
 	
-		RoleManagerService roleManagerServiceImpl = (RoleManagerService)ac.getBean("roleManagerServiceImpl");
+		/*RoleManagerService roleManagerServiceImpl = (RoleManagerService)ac.getBean("roleManagerServiceImpl");
 		int number = roleManagerServiceImpl.countService();
-		System.out.println(" "+number);
+		System.out.println(" "+number);*/
+		
+		UserManagerService userManagerServiceImpl = (UserManagerService)ac.getBean("userManagerServiceImpl");
+		List<UserVo> list= userManagerServiceImpl.listService();
+		for(UserVo userVo:list){
+			System.out.println("id:  "+userVo.getObjectId()+"    用户名: "+userVo.getUsername()+" 密码:"+userVo.getPassword()+" 创建时间:"+userVo.getCreatedAt());
+		}
 		/*List<Role> list = roleManagerServiceImpl.listService();
 		
 		for(Role role:list){

@@ -10,5 +10,5 @@ public interface UserDao {
 	void delete(User u);
 	List<User> getAll();
 	User getById(String objectId);
-	
+	public int count();
 }

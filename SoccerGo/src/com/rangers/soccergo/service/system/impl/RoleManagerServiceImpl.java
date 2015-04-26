@@ -30,6 +30,10 @@ public class RoleManagerServiceImpl implements RoleManagerService{
 	public void setRoleDaoImpl(RoleDao roleDaoImpl) {
 		this.roleDaoImpl = roleDaoImpl;
 	}
+	/** 
+	  * 创建角色 将前台传回来的jsonObject转换为Role对象
+	  * @return Role 返回创建角色对象
+	 */
 	public Role jsonToModelBySave(JSONObject jsonObject){
 		String name = jsonObject.optString("name");
 		Role role  = new Role();

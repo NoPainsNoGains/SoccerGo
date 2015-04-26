@@ -2,10 +2,13 @@ package com.rangers.soccergo.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.rangers.soccergo.dao.UserDao;
+import com.rangers.soccergo.db.util.CloudQuery;
 import com.rangers.soccergo.db.util.CloudSession;
 import com.rangers.soccergo.model.User;
-
+@Component("userDaoImpl")
 public class UserDaoImpl implements UserDao {
 	private CloudSession session = new CloudSession();
 	
@@ -44,5 +47,12 @@ public class UserDaoImpl implements UserDao {
 	public User getById(String objectId) {
 		return (User)session.get(User.class,objectId);
 	}
-
+	/* 
+     * 得到user的个数
+     */	
+	public int count() {
+		String cql = "select count(*) from _User";
+		CloudQuery query = session.executeQuery(cql);
+		return (Integer) query.exeResult("count");		
+	}
 }
