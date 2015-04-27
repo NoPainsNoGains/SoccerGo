@@ -157,7 +157,7 @@ public class HttpClientUtil {
 		        		 System.err.println(res.get("error"));
 		        	 }
 		        	 if(res.containsKey("code")){
-		        		 return res.get("code");
+		        		 return String.valueOf(res.get("code"));
 		        	 }
 		        	 return "succeed";
 		    }

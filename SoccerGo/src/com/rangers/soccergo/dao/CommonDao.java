@@ -11,4 +11,5 @@ public interface CommonDao<T> {
 	T getById(String objectId);
 	List<T> getAll();
 	int count();
+	List<T> findByPage(int page,int pageSize);
 }

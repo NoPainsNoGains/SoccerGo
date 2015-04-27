@@ -51,7 +51,7 @@ public class CloudQuery {
 			}
 			else{
 				res = res.substring(res.indexOf("["), res.indexOf("]")+1);
-				System.out.println(res);
+				//System.out.println(res);
 				int index = findBystr(cql);
 				Class entity = null;
 				if(index != -1){

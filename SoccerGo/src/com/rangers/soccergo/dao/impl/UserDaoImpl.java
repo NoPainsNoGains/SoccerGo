@@ -44,5 +44,5 @@ public class UserDaoImpl implements UserDao {
 	public User getById(String objectId) {
 		return (User)session.get(User.class,objectId);
 	}
-
+	
 }

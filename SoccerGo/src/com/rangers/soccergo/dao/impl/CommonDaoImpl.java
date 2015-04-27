@@ -1,5 +1,7 @@
 package com.rangers.soccergo.dao.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import com.rangers.soccergo.dao.CommonDao;
@@ -25,7 +27,26 @@ public class CommonDaoImpl<T> implements CommonDao<T> {
 		return session.save(t);	
 	}
 
-	public boolean update(T t) {	
+	public boolean update(T t) {
+		/*try {
+			Method m = entity.getMethod("setCreatedAt", null);
+			m.invoke(t, null);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 		return session.update(t,"");
 	}
 
@@ -58,6 +79,18 @@ public class CommonDaoImpl<T> implements CommonDao<T> {
 		cql = cql + cqlClassName;
 		CloudQuery query = session.executeQuery(cql);
 		return (Integer) query.exeResult("count");	
+	}
+
+	public List<T> findByPage(int page, int pageSize) {
+		String cql = "select * from ";
+		String cqlClassName = StringUtil.getClassName(entity.toString());
+		String limitCondition = " limit ?,?";
+		cql = cql + cqlClassName + limitCondition;
+		System.out.println(cql);
+		CloudQuery query = session.executeQuery(cql);
+		query.setParam(0, (page-1)*pageSize);
+		query.setParam(1, pageSize);
+		return query.list();
 	}
 
 }

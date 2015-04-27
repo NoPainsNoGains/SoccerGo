@@ -21,14 +21,14 @@ public class RoleDaoTest {
 	public void testSave() {
 		RoleDao roleDao = new RoleDaoImpl();
 		Role r = new Role();
-		r.setName("testSave2");
+		r.setName("testSave3");
 		System.out.println(roleDao.save(r));
 	}
 	@Test
 	public void testgetUsersByRoleId(){
 		Role r = new Role();
-		r.setObjectId("552f2157e4b0643b70a6028b");
-		List<User> list = roleDao.getUsersByRoleId(r.getObjectId());
+		r.setObjectId("553e388ce4b069c225d9759a");
+		List<User> list = (List<User>) roleDao.getUsersByRoleId(r.getObjectId());
 		for(int i=0;list!=null&&i<list.size();i++){
 			System.out.println(list.get(i));
 		}
@@ -44,7 +44,7 @@ public class RoleDaoTest {
 	}
 	@Test
 	public void testgetById(){
-		Role r = roleDao.getById("552e76bae4b0643b70a293b1");
+		Role r = roleDao.getById("553e388ce4b069c225d9759a");
 		System.out.println(r);
 	}
 	@Test
@@ -54,7 +54,7 @@ public class RoleDaoTest {
 		/*for(int i=0;users!=null&&i<users.size();i++){
 			System.out.println(users.get(i));
 		}*/
-		Role r = roleDao.getById("552e76bae4b0643b70a293b1");
+		Role r = roleDao.getById("553e388ce4b069c225d9759a");
 		System.out.println(r);
 		roleDao.addUsers(r, users);
 		
@@ -78,7 +78,7 @@ public class RoleDaoTest {
 	@Test
 	public void testdeleteUser(){
 		CloudSession session = new CloudSession();
-		User u = (User) session.get(User.class, "552e8646e4b0643b70a316b0");
+		User u = (User) session.get(User.class, "553e388ce4b069c225d9759a");
 		Role r = roleDao.getById("552e76bae4b0643b70a293b1");
 		roleDao.deleteUser(r, u);
 	}
@@ -86,7 +86,7 @@ public class RoleDaoTest {
 	public void testdeleteRole(){
 		Role r = roleDao.getById("553714c1e4b0c62299383d38");
 		System.out.println(r);
-		roleDao.deleteRole(r);
+		roleDao.delete(r);
 	}
 	@Test
 	public void testupdate(){
