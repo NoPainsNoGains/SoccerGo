@@ -15,51 +15,7 @@ import com.rangers.soccergo.db.util.JsonUtil;
 import com.rangers.soccergo.model.Role;
 import com.rangers.soccergo.model.User;
 @Component("roleDaoImpl")
-public class RoleDaoImpl implements RoleDao {
-	private CloudSession session = new CloudSession();
-	
-	public CloudSession getSession() {
-		return session;
-	}
-	
-	public void setSession(CloudSession session) {
-		this.session = session;
-	}
-	
-    /*
-     * 
-     * 保存角色
-     */	
-	public void save(Role role) {
-		session.save(role);		
-	}
-	
-	/*
-     * 通过角色ID 得到该角色下的所有用户
-     * 
-     */	
-	public List<User> getUsersByRoleId(String objectId) {
-		String cql = "select * from _User where related users to pointer('_Role',?)";
-		CloudQuery query = session.executeQuery(cql);
-		query.setParam(0,objectId);
-		return query.list();
-	}
-	
-	/*
-     * 得到角色表中的所有角色
-     * 
-     */	
-	public List<Role> getAll() {
-		return session.get(new Role());
-	}
-	
-	/*
-     * 
-     * 通过Id查找一个角色
-     */	
-	public Role getById(String objectId) {
-		return (Role) session.get(Role.class, objectId);
-	}
+public class RoleDaoImpl extends CommonDaoImpl<Role> implements RoleDao  {
 	
 	/*
      * 
@@ -69,7 +25,7 @@ public class RoleDaoImpl implements RoleDao {
 		if(u == null)
 			return ;
 		Role r = operateUser(role,u,"AddRelation");
-		session.update(r,"");
+		this.getSession().update(r,"");
 	}
 	/*
      * 
@@ -80,7 +36,7 @@ public class RoleDaoImpl implements RoleDao {
 			return ;
 		//定义一个Role临时变量，存储id 与users；
 		Role r = operateUser(role,list,"AddRelation");
-		session.update(r,"");
+		this.getSession().update(r,"");
 	}
 	/*
      * 
@@ -90,9 +46,19 @@ public class RoleDaoImpl implements RoleDao {
 		if(u == null)
 			return;
 		Role r = operateUser(role,u,"RemoveRelation");
-		session.update(r,"");
+		this.getSession().update(r,"");
 	}
-
+	/*
+     * 通过角色ID 得到该角色下的所有用户
+     * 
+     */	
+	public List<User> getUsersByRoleId(String objectId) {
+		String cql = "select * from _User where related users to pointer('_Role',?)";
+		CloudQuery query = this.getSession().executeQuery(cql);
+		query.setParam(0,objectId);
+		return query.list();
+	}
+	
 	/*
      * 
      * 对该角色删除多个用户
@@ -102,7 +68,7 @@ public class RoleDaoImpl implements RoleDao {
 			return ;
 		Role r = operateUser(role,list,"RemoveRelation");
 		//System.out.println("r****"+r);
-		session.update(r,"");		
+		this.getSession().update(r,"");		
 	}
 	
 	private Role operateUser(Role role, List<User> list, String opt) {
@@ -140,19 +106,5 @@ public class RoleDaoImpl implements RoleDao {
 		updateTemp.setUsers(users);
 		return updateTemp;
 	}
-	/*
-     * 
-     * 删除该角色
-     */	
-	public void deleteRole(Role role) {	
-		session.delete(role);
-	}
-	/* 
-     * 得到role的个数
-     */	
-	public int count() {
-		String cql = "select count(*) from _Role";
-		CloudQuery query = session.executeQuery(cql);
-		return (Integer) query.exeResult("count");		
-	}
+
 }

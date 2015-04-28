@@ -12,14 +12,21 @@ public class Module {
 	private String objectId;
 	private Date createdAt;
 	private Date updatedAt;
+	private String id;
 	private String module_name;
 	private int status;
-	//private Module father_id;
 	private HashMap<String,Object> father_id;
 	private String remark;
 	private String page;
 	private String module_code;
 	private boolean isCatalogue;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getObjectId() {
 		return objectId;
 	}
@@ -50,13 +57,6 @@ public class Module {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
-	/*public Module getFather_id() {
-		return father_id;
-	}
-	public void setFather_id(Module father_id) {
-		this.father_id = father_id;
-	}*/
 	public String getRemark() {
 		return remark;
 	}
