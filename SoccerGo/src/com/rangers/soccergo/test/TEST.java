@@ -28,11 +28,11 @@ public class TEST {
 		int number = roleManagerServiceImpl.countService();
 		System.out.println(" "+number);*/
 		
-		UserManagerService userManagerServiceImpl = (UserManagerService)ac.getBean("userManagerServiceImpl");
+		/*UserManagerService userManagerServiceImpl = (UserManagerService)ac.getBean("userManagerServiceImpl");
 		List<UserVo> list= userManagerServiceImpl.listService();
 		for(UserVo userVo:list){
 			System.out.println("id:  "+userVo.getObjectId()+"    用户名: "+userVo.getUsername()+" 密码:"+userVo.getPassword()+" 创建时间:"+userVo.getCreatedAt());
-		}
+		}*/
 		/*List<Role> list = roleManagerServiceImpl.listService();
 		
 		for(Role role:list){

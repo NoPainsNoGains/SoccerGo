@@ -51,7 +51,7 @@ public class CloudQuery {
 			}
 			else{
 				res = res.substring(res.indexOf("["), res.indexOf("]")+1);
-				System.out.println(res);
+				//System.out.println(res);
 				int index = findBystr(cql);
 				Class entity = null;
 				if(index != -1){
@@ -74,7 +74,6 @@ public class CloudQuery {
 		return null;
 	}
 	private String formatParams(Object[] objects){
-		//System.out.println(StringUtil.paramsToString(objects));
 		return StringUtil.paramsToString(objects);
 	}
 	private int findBystr(String cql){
@@ -93,9 +92,9 @@ public class CloudQuery {
 		try {
 			URI uri = uriBuilder.setParameter("cql", cql)
 					            .setParameter("pvalues",formatParams(params)).build();
-			System.out.println("uri 地址："+uri);
+			System.out.println("发送的 uri 地址："+uri);
 			String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-			System.out.println(res);
+			System.out.println("返回的值 ： " + res);
 			HashMap<String, Object> map = (HashMap<String, Object>) JsonUtil.getInstance().json2obj(res, Map.class);
 			if(map.containsKey(key))
 			     return map.get(key);
@@ -109,4 +108,5 @@ public class CloudQuery {
 		}
 		return null;
 	}
+
 }

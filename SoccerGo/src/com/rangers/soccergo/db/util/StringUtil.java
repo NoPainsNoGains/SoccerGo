@@ -21,6 +21,11 @@ public class StringUtil {
 		else{
 			temp = claz;
 		}
+		if(!temp.equals("")){
+			if(map.containsValue(temp)){
+				temp = "_" + temp;
+			}
+		}
 		return temp;
 	}
 	//判断一个字符串中一个字符的个数

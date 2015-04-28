@@ -4,7 +4,9 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
+import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -18,9 +20,11 @@ import net.sf.json.JSONObject;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -84,10 +88,24 @@ public class JsonUtil<T> {
 		}		
 		return out.toString();
 	}
+	public  String obj2jsondate(Object obj){
+		JsonGenerator jg = null;
+		StringWriter out = new StringWriter();
+		try {
+			jf = getFactory();
+			mapper = new ObjectMapper().setDateFormat(new SimpleDateFormat("'{\"type\":\"Date\",'yyyy-MM-dd'T'HH:mm:ss.SSS'Z}'"));	   
+			jg = jf.createGenerator(out);
+			mapper.writeValue(jg, obj);
+			ObjectNode root = (ObjectNode) mapper.readTree(out.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return out.toString();
+	}
 	public  Object json2obj(String json,Class<?> clz ){
 		try {
 			mapper = getMapper();
-		
 			return mapper.readValue(json, clz);			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
