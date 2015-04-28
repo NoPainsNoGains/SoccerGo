@@ -10,10 +10,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_DEFAULT)
 public class Module {
 	private String objectId;
-	@JsonIgnore
 	private Date createdAt;
-	@JsonIgnore
 	private Date updatedAt;
+	private String id;
 	private String module_name;
 	private int status;
 	private HashMap<String,Object> father_id;
@@ -21,6 +20,13 @@ public class Module {
 	private String page;
 	private String module_code;
 	private boolean isCatalogue;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getObjectId() {
 		return objectId;
 	}

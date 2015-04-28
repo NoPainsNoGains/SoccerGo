@@ -45,12 +45,12 @@ public class OfficialMatchDaoTest {
 		impl.findByPage(1, 5);
 	}
 	@Test
-	public void testgetById(){
+	public void testupdate(){
 		OfficialMatch o = impl.getById("553e32fae4b069c225d923d9"); 
 		System.out.println(o);
-		o.setText("test update");
-		o.setCreatedAt(null);
-		o.setUpdatedAt(null);
+		o.setText("test update2");
+		//o.setCreatedAt(null);
+		//o.setUpdatedAt(null);
 		impl.update(o);
 	}
 	@Test

@@ -85,7 +85,7 @@ public class CloudSession {
 	public <T> boolean update(T t,Serializable id){
 		//反射机制 得到ID
 		try {
-			Method m = t.getClass().getMethod("getObjectId", null);
+			Method m = t.getClass().getMethod("getObjectId",null);
 			//得到id
 			String s = (String) m.invoke(t,null);
 			init(t.getClass(),s);
@@ -116,7 +116,7 @@ public class CloudSession {
 	public Object get(Class entity,Serializable id){
 		init(entity,id);
 		String res = HttpClientUtil.getInstance().sendGetRequest(uri);
-		System.out.println(res);
+		System.out.println("GET返回的值： " + res);
 		if(res == null || res.equals("")||res.equals("{}")){
 			return null;
 		}

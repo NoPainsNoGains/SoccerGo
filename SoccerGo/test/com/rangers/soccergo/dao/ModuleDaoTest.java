@@ -16,6 +16,7 @@ import com.rangers.soccergo.dao.impl.ModuleDaoImpl;
 import com.rangers.soccergo.db.util.HttpClientUtil;
 import com.rangers.soccergo.db.util.JsonUtil;
 import com.rangers.soccergo.model.Module;
+import com.rangers.soccergo.model.User;
 
 public class ModuleDaoTest {
 	private ModuleDao moduleDao = null;
@@ -27,17 +28,17 @@ public class ModuleDaoTest {
 	@Test
 	public void testsave() {
 		Module m = new Module();
-		m.setModule_name("test1");
+		m.setModule_name("test11");
 		m.setModule_code("1001");
 		moduleDao.save(m);	
 	}
 	
 	@Test
 	public void testupdate() {
-		Module m = moduleDao.getById("5538ff89e4b0066130339d46");
+		Module m = moduleDao.getById("553eec78e4b017f1157ddd63");
 		//System.out.println(m);
-		m.setPage("100");
-		m.setRemark("test update father_id 2");
+		m.setPage("11");
+		m.setRemark("test update common3");
 		HashMap<String,Object> map = new LinkedHashMap<String, Object>();
 		map.put("__type","Pointer");
 	    map.put("className", "Module");
@@ -50,12 +51,12 @@ public class ModuleDaoTest {
 	}
 	@Test
 	public void testdelete() {
-		Module m = moduleDao.getById("5538ffa6e4b0066130339e8a");
+		Module m = moduleDao.getById("553eec78e4b017f1157ddd63");
 		moduleDao.delete(m);
 	}
 	@Test
 	public void testgetById() {
-		Module m = moduleDao.getById("5538ff89e4b0066130339d46");
+		Module m = moduleDao.getById("553eec78e4b017f1157ddd63");
 		System.out.println(m);
 		String json = JsonUtil.getInstance().obj2json(m);
 		System.out.println(json);
@@ -77,6 +78,19 @@ public class ModuleDaoTest {
 		String json = HttpClientUtil.getInstance().sendGetRequest(uri);
 		System.out.println(json);
 		
+	}
+	@Test
+	public void testcount(){
+		System.out.println(moduleDao.count());
+	}
+	@Test
+	public void testfindByPage(){
+		List<Module> list = moduleDao.findByPage(1, 5);
+		System.out.println(list == null);
+		System.out.println(list.size());
+		for(int i=0;list!=null &&i<list.size();i++){
+			System.out.println(list.get(i));
+		}
 	}
 
 }

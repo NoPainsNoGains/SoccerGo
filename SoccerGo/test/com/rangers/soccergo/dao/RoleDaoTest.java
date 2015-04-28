@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.rangers.soccergo.dao.impl.CommonDaoImpl;
 import com.rangers.soccergo.dao.impl.RoleDaoImpl;
 import com.rangers.soccergo.db.util.CloudSession;
 import com.rangers.soccergo.db.util.JsonUtil;
@@ -84,9 +85,9 @@ public class RoleDaoTest {
 	}
 	@Test
 	public void testdeleteRole(){
-		Role r = roleDao.getById("553714c1e4b0c62299383d38");
+		Role r = roleDao.getById("553e388ce4b069c225d9759a");
 		System.out.println(r);
-		roleDao.delete(r);
+		//roleDao.delete(r);
 	}
 	@Test
 	public void testupdate(){
@@ -97,5 +98,15 @@ public class RoleDaoTest {
 		r.setUpdatedAt(null);
 		roleDao.update(r);
 	}
-
+	@Test
+	public void testcount(){
+		System.out.println(roleDao.count());
+	}
+	@Test
+	public void testfindByPage(){
+		List<Role> list = roleDao.findByPage(2, 5);
+		for(int i=0;list!=null&&i<list.size();i++){
+			System.out.println(list.get(i));
+		}
+	}
 }
