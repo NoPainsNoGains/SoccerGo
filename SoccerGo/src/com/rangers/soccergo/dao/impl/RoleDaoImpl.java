@@ -103,5 +103,17 @@ public class RoleDaoImpl extends CommonDaoImpl<Role> implements RoleDao  {
 		updateTemp.setUsers(users);
 		return updateTemp;
 	}
+	public List<User> getPageUsersByRoleId(int page, int pageSize,
+			String objectId) {
+		String cql = "select * from _User where related users to pointer('_Role',?)";
+		String limitCondition = " limit ?,?";
+		String orderBy = " order by createdAt desc";
+		cql = cql + limitCondition + orderBy;
+		CloudQuery query = this.getSession().executeQuery(cql);
+		query.setParam(0,objectId);
+		query.setParam(1, (page-1)*pageSize);
+		query.setParam(2, pageSize);
+		return query.list();
+	}
 
 }

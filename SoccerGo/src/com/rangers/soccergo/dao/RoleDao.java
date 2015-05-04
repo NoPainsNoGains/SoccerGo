@@ -11,4 +11,5 @@ public interface RoleDao extends CommonDao<Role> {
 	void deleteUser(Role role,User u);
 	void deleteUsers(Role role,List<User> list);
 	List<User> getUsersByRoleId(String objectId);
+	List<User> getPageUsersByRoleId(int page, int pageSize,String objectId);
 }
