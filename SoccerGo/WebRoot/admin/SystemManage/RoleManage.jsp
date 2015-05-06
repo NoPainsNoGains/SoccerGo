@@ -22,6 +22,8 @@
 		<div id="grid"></div>
 		<script>
 			var record = 0;
+			var inrecord = 0;
+			var inObjectId = undefined;
 		    $(document).ready(function() {
                     var element = $("#grid").kendoGrid({
                         dataSource: {
@@ -80,6 +82,7 @@
                               { field: "name", title: "职务"},
                               { field: "createdAt", title: "创建时间"},
                               { field: "updatedAt", title: "更新时间"},
+                              { command:[{text:"编辑",click:roleAuthorityEdit}],title: "角色权限编辑"},
                               { command: [{
 							                 name: "start",
 							                 text: "删除",
@@ -111,7 +114,7 @@
                 });
 
                 function detailInit(e) {    
-                    $("<div/>").appendTo(e.detailCell).kendoGrid({
+                    $("<div id=\"ingrid\"/>").appendTo(e.detailCell).kendoGrid({
                      	dataSource: {
                             transport: {
                                 read : {
@@ -120,6 +123,7 @@
 		                            dataType : "json"
 		                        },
 		                        parameterMap : function(options, operation) {   
+		                        	inObjectId = e.data.objectId;
 		                        	if (operation == "read"){
 		                        		return{
 			                        			roleObjectId:e.data.objectId,
@@ -151,7 +155,6 @@
 		                           return json.total;  
 		                        }                  
 		                    },
-		                    requestEnd:dataSource_requestEnd,
                             serverPaging: true,
                             serverSorting: true,
                             serverFiltering: true,
@@ -181,19 +184,17 @@
 	                    },
                   		selectable:"row",
                         columns: [
-                    		  {title: "序号",template: "#= ++record #",width: 100}, 
+                    		  {title: "序号",template: "#= ++inrecord #",width: 100}, 
+                    		  { field: "mobilePhoneNumber", title: "手机号"},     
                               { field: "username", title: "用户名"},     
                               { field: "nickname", title: "昵称"},
-                              { field: "preferedRole", title: "擅长位置"},
-                              { field: "points", title: "积分"},
-                              { field: "level", title: "用户等级"},
                               { field: "createdAt", title: "创建时间"},
-                              { field: "updatedAt", title: "更新时间"}
+                              { field: "updatedAt", title: "更新时间"} 
 							],
 						  edit: function (e) {        	
 		                     var editWindow = e.container.data("kendoWindow");  
 			                 if (e.model.isNew()) {  
-			                    editWindow.title('增加角色用户');
+			                     editWindow.title('增加角色用户');
 			                     $("a.k-grid-update")[0].innerHTML="保存";
 		                    	 $("a.k-grid-cancel")[0].innerHTML="取消";
 		                    	 e.container.find('.k-grid-update,.k-grid-cancel').css('float','right');
@@ -202,13 +203,14 @@
 			                } 
 	           			  },
 	           			  dataBinding: function() {
-	   						 record = (this.dataSource.page() -1) * this.dataSource.pageSize();
+	   						 inrecord = (this.dataSource.page() -1) * this.dataSource.pageSize();
 	 					 },
 	 					 change:function(e){
 	           			 		var grid = $("#grid").data("kendoGrid");
 								selectedItem = grid.dataItem(grid.select());	
 	           			 }
                     });
+                   	
                 }
                  function dataSource_requestEnd(e) {
 					if (e.type == "create" || e.type == "destory") {
@@ -224,6 +226,10 @@
 			    		alert(objectId);
 				    }
 			    }
+			   
+			    function roleAuthorityEdit(){
+			    	alert("编辑角色权限");
+			   }
 		</script>
 		<script id="popup-editor" type="text/x-kendo-template"> 
   				<p>

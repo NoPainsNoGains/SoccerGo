@@ -39,8 +39,8 @@ public class TEST {
 			System.out.println("id:  "+role.getObjectId()+"    父id: "+role.getName());
 		}*/
 		
-	
-		
+		RoleManagerService roleManagerServiceImpl = (RoleManagerService)ac.getBean("roleManagerServiceImpl");
+		roleManagerServiceImpl.addRoleUser("5539fe29e4b069c225add71f", "552e6a7ee4b0643b70a2120d");
 
 	}
 }

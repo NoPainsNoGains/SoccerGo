@@ -93,13 +93,16 @@
                     selectable:"row",
                     columns: [
                     		  {title: "序号",template: "#= ++record #",width: 100}, 
+                    		  { field: "mobilePhoneNumber", title: "手机号"},
                               { field: "username", title: "用户名"},     
                               { field: "nickname", title: "昵称"},
-                              { field: "preferedRole", title: "擅长位置"},
+                          /*     { field: "preferedRole", title: "擅长位置"},
                               { field: "points", title: "积分"},
-                              { field: "level", title: "用户等级"},
+                              { field: "level", title: "用户等级"}, */
                               { field: "createdAt", title: "创建时间"},
-                              { field: "updatedAt", title: "更新时间"}
+                              { field: "updatedAt", title: "更新时间"},
+                              { field: "roleName", title: "角色名"},
+                              { command:[{text:"编辑",click:userRoleEditOpen}],title: "角色编辑"},
 							],
 					  edit: function (e) {        	
 	                     var editWindow = e.container.data("kendoWindow");  
@@ -121,13 +124,43 @@
            			 },
            			 cancel:function(){
            			 	selectedItem=undefined;
-						rowIndex=undefined;
 						$('#grid').data('kendoGrid').dataSource.read();
 		   	  			$('#grid').data('kendoGrid').refresh();	
            			 }
            			 
           	  });
-				
+				var winEditUserRole = $("#winEditUserRole");
+				if (!winEditUserRole.data("kendoWindow")) {
+					winEditUserRole = winEditUserRole.kendoWindow({
+						width: "360px",
+						draggable: true,
+						modal: true,          
+						resizable: true,
+						visible: false,
+						title: "编辑角色",
+					});
+				}
+				/*左右用户列表*/
+				$("#roleNameId").kendoDropDownList({
+					dataTextField: "name",
+					dataValueField: "objectId",		
+					optionLabel: "请选择角色" ,
+					dataSource: {
+						transport: {
+						  read: {
+							async: false,
+							type: "post",
+							dataType: "json",
+						    url: "/SoccerGo/admin/SystemManage/RoleManager/listAllRole.action"
+						   }
+						 },	 
+						 schema : {
+						    data : function(json) { 
+						       return json; 
+						    }                      
+						 }
+					}
+			    });
             });	 
 		   function dataSource_requestEnd(e) {
 				if (e.type == "create" || e.type == "destory") {
@@ -137,8 +170,62 @@
 			        }
   				 }
 		    }
-		
+			function userRoleEditOpen(){
+				if(selectedItem != undefined){
+					document.getElementById("mobilePhoneNumberId").value = selectedItem.mobilePhoneNumber;
+					document.getElementById("usernameId").value=selectedItem.username;
+					document.getElementById("nicknameId").value=selectedItem.nickname;
+				}
+			 	var winEditUserRole = $("#winEditUserRole");
+           		winEditUserRole.data("kendoWindow").open();
+           		winEditUserRole.data("kendoWindow").center(); 
+			}
+			function UserRoleAddSave(){
+			  var data = $("#roleNameId").data("kendoDropDownList").dataItem();
+		   	     if(data.objectId == "" || data== undefined)
+		   	     	alert("请选择角色再保存");
+		    	 else{
+		    	 	  if(selectedItem != undefined ){
+				        //添加角色用户列表     	
+				    	$.ajax({
+					        cache: true,
+					        type: "POST",
+					        url:"/SoccerGo/admin/SystemManage/RoleManager/addUserRole.action",
+					        data:{"roleId":data.objectId,"userId":selectedItem.objectId},
+					        async: false,
+					        dataType: "json",
+					        success: function(flag) {
+				         		var winEditUserRole = $("#winEditUserRole");
+						    	winEditUserRole.data("kendoWindow").close();
+						    	var gview = $("#grid").data("kendoGrid");
+								gview.dataSource.read();
+					        }
+					    }); 
+			   		 }
+		    	 } 
+			
+			}
           </script>
-	
+		<div  id="winEditUserRole" style="display:none;">
+			 <label style="margin-left:30px;font-size:15px;">手机号:
+				 <input id="mobilePhoneNumberId"  style="width: 200px;background-color: transparent; border: 1px" />
+			 </label>
+			 </br>
+			 <label style="margin-left:30px;font-size:15px;">用户名:
+				 <input id="usernameId"  style="width: 200px;background-color: transparent; border: 1px" />
+			 </label>
+			  </br>
+			  <label style="margin-left:42px;font-size:15px;">昵称:
+				 <input id="nicknameId"  style="width: 200px;background-color: transparent; border: 1px" />
+			 </label>
+			  </br>
+			 <label style="margin-left:42px;font-size:15px;">角色:
+				 <input id="roleNameId"  style="width: 200px;background-color: transparent; border: 1px" />
+			 </label>
+			  </br>
+              <div style="float:right;">
+	 			  	 <a class='k-button' onclick='UserRoleAddSave()' >确定</a>
+	 		  </div>
+        </div>
 	</body>
 </html>

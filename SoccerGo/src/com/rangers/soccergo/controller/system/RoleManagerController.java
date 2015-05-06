@@ -2,6 +2,8 @@ package com.rangers.soccergo.controller.system;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.rangers.soccergo.db.util.JsonUtil;
 import com.rangers.soccergo.service.system.RoleManagerService;
 import com.rangers.soccergo.vo.system.RolePage;
+import com.rangers.soccergo.vo.system.RoleVo;
 import com.rangers.soccergo.vo.system.UserPage;
+import com.rangers.soccergo.vo.system.UserVo;
 
 @Controller   
 @RequestMapping("/admin/SystemManage/RoleManager") 
@@ -60,13 +64,16 @@ public class RoleManagerController {
 			e.printStackTrace();
 		}
 	}
+	/** 
+	  * 列出角色下面的用户列表
+	 */
 	@RequestMapping("/listRoleUser.action") 
 	public void listByRoleUser(HttpServletRequest request,HttpServletResponse response){
 		int page = Integer.parseInt(request.getParameter("pageIn"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSizeIn"));
 		String roleObjectId = request.getParameter("roleObjectId");
 		userPage.setRows(roleManagerServiceImpl.listRoleUserService(page,pageSize,roleObjectId));
-		userPage.setTotal(roleManagerServiceImpl.countRoleUserService());
+		userPage.setTotal(roleManagerServiceImpl.countRoleUserService(roleObjectId));
 		String jsonStr = JsonUtil.bean2json(userPage);
 		PrintWriter out = null;
 		response.setContentType("application/json");
@@ -77,6 +84,9 @@ public class RoleManagerController {
 			e.printStackTrace();
 		}
 	}
+	/** 
+	  * 增加角色
+	 */
 	@RequestMapping("/add.action")
 	public void add(HttpServletRequest request,HttpServletResponse response){
 		String models = request.getParameter("models");
@@ -84,6 +94,41 @@ public class RoleManagerController {
 		roleManagerServiceImpl.addService(jsonObject);
 		PrintWriter out = null;
 		String jsonStr = JsonUtil.string2json("0");//返回状态0 成功
+		response.setContentType("application/json");
+		try {
+			out = response.getWriter();
+			out.write(jsonStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/** 
+	  * 增加角色用户
+	 */
+	@RequestMapping("/addUserRole.action") 
+	public void addUserRole(HttpServletRequest request,HttpServletResponse response){
+		String roleId = request.getParameter("roleId");
+		String userId = request.getParameter("userId");
+		String jsonStr = JsonUtil.string2json("0");//返回状态0 成功
+		roleManagerServiceImpl.deletRoleUser(roleId, userId);
+		roleManagerServiceImpl.addRoleUser(roleId, userId);
+		PrintWriter out = null;
+		response.setContentType("application/json");
+		try {
+			out = response.getWriter();
+			out.write(jsonStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/** 
+	  * 列出所有的角色
+	 */
+	@RequestMapping("/listAllRole.action") 
+	public void listAllUser(HttpServletRequest request,HttpServletResponse response){
+		List<RoleVo> list = roleManagerServiceImpl.listAllService();
+		String jsonStr = JsonUtil.list2json(list);
+		PrintWriter out = null;
 		response.setContentType("application/json");
 		try {
 			out = response.getWriter();

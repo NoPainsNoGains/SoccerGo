@@ -13,6 +13,7 @@ import com.rangers.soccergo.common.util.Constant;
 import com.rangers.soccergo.common.util.DateUtil;
 import com.rangers.soccergo.common.util.ModelToVoUtil;
 import com.rangers.soccergo.dao.RoleDao;
+import com.rangers.soccergo.dao.UserDao;
 import com.rangers.soccergo.model.Role;
 import com.rangers.soccergo.model.User;
 import com.rangers.soccergo.service.system.RoleManagerService;
@@ -27,7 +28,15 @@ import com.rangers.soccergo.vo.system.UserVo;
 @Component("roleManagerServiceImpl")
 public class RoleManagerServiceImpl implements RoleManagerService{
 	private  RoleDao roleDaoImpl;
+	private UserDao userDaoImpl;
 	
+	public UserDao getUserDaoImpl() {
+		return userDaoImpl;
+	}
+	@Resource(name="userDaoImpl")
+	public void setUserDaoImpl(UserDao userDaoImpl) {
+		this.userDaoImpl = userDaoImpl;
+	}
 	public RoleDao getRoleDaoImpl() {
 		return roleDaoImpl;
 	}
@@ -97,7 +106,7 @@ public class RoleManagerServiceImpl implements RoleManagerService{
 	  * @return roleVoList 返回封装为grid需要的对象列表 时间为string类型
 	 */
 	public List<UserVo> listRoleUserService(int page, int pageSize,String roleObjectId) {
-		List<User> userList = roleDaoImpl.getUsersByRoleId(roleObjectId);
+		List<User> userList = roleDaoImpl.getPageUsersByRoleId(page, pageSize, roleObjectId);
 		List<UserVo> userVoList = this.modelToVoBylist(userList); 
 		return userVoList;
 	}
@@ -105,8 +114,36 @@ public class RoleManagerServiceImpl implements RoleManagerService{
 	  * 计算角色下面的用户总数
 	  * @return 角色对应的用户数目
 	 */
-	public int countRoleUserService() {
-		return 5;
+	public int countRoleUserService(String roleObjectId) {
+		return roleDaoImpl.countUsersByRoleId(roleObjectId);
+	}
+	/** 
+	  * 保存角色的新用户
+	  * @return 角色对应的用户数目
+	 */
+	public void addRoleUser(String RoleId, String UserId) {
+		User user= userDaoImpl.getById(UserId);
+		Role role = roleDaoImpl.getById(RoleId);
+		roleDaoImpl.addUser(role, user);
+	}
+	/** 
+	  * 列出所有角色
+	  * @return 返回角色列表
+	 */
+	public List<RoleVo> listAllService() {
+		List<Role> roleList = roleDaoImpl.getAll();
+		List<RoleVo> roleVoList = ModelToVoUtil.roleToVoRole(roleList);
+		return roleVoList;
+	}
+	/** 
+	  * 删除角色
+	 */
+	public void deletRoleUser(String RoleId, String UserId) {
+		User user= userDaoImpl.getById(UserId);
+		List<Role> roleList = roleDaoImpl.getRoleByUserId(UserId);
+		for(Role role: roleList){
+			roleDaoImpl.deleteUser(role, user);
+		}
 	}
 
 }

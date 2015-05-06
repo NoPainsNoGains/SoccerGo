@@ -2,6 +2,8 @@ package com.rangers.soccergo.controller.system;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.rangers.soccergo.db.util.JsonUtil;
 import com.rangers.soccergo.service.system.UserManagerService;
 import com.rangers.soccergo.vo.system.UserPage;
+import com.rangers.soccergo.vo.system.UserVo;
 
 @Controller   
 @RequestMapping("/admin/SystemManage/UserManager") 
@@ -29,6 +32,7 @@ public class UserManagerController {
 	public UserManagerService getUserManagerServiceImpl() {
 		return userManagerServiceImpl;
 	}
+	
 	@Resource(name="userManagerServiceImpl")
 	public void setUserManagerServiceImpl(UserManagerService userManagerServiceImpl) {
 		this.userManagerServiceImpl = userManagerServiceImpl;
@@ -41,6 +45,20 @@ public class UserManagerController {
 		userPage.setRows(userManagerServiceImpl.listService(page,pageSize));
 		userPage.setTotal(userManagerServiceImpl.countService());
 		String jsonStr = JsonUtil.bean2json(userPage);
+		PrintWriter out = null;
+		response.setContentType("application/json");
+		try {
+			out = response.getWriter();
+			out.write(jsonStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping("/listAllUser.action") 
+	public void listAllUser(HttpServletRequest request,HttpServletResponse response){
+		List<UserVo> list = userManagerServiceImpl.listAllService();
+		String jsonStr = JsonUtil.list2json(list);
 		PrintWriter out = null;
 		response.setContentType("application/json");
 		try {
