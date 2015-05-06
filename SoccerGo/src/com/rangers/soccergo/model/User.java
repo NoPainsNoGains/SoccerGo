@@ -22,8 +22,7 @@ public class User {
     private String authData;
     private HashMap<String,Object> avatar;
     /*end*/
-   
-	/*自定义字段*/
+  
     private int prefered_role;  //擅长位置
     private String nickname;    //昵称
     private String points;      //积分
@@ -122,6 +121,7 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
 	@Override
 	public String toString() {
 		return "User [objectId=" + objectId + ", createdAt=" + createdAt
@@ -130,9 +130,11 @@ public class User {
 				+ ", mobilePhoneVerified=" + mobilePhoneVerified
 				+ ", mobilePhoneNumber=" + mobilePhoneNumber + ", email="
 				+ email + ", authData=" + authData + ", avatar=" + avatar
-				+ ", prefered_role=" + prefered_role + ", nickname=" + nickname
-				+ ", points=" + points + ", level=" + level + "]";
+				+ ", prefered_role=" + prefered_role
+				+ ", nickname=" + nickname + ", points=" + points + ", level="
+				+ level + "]";
 	}
+	
 	
     
 }
