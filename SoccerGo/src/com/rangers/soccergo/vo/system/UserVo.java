@@ -13,6 +13,21 @@ public class UserVo {
     private String nickname;    //昵称
     private String points;      //积分
     private int level;        //等级
+    private String roleName;
+    private String mobilePhoneNumber;
+    
+	public String getMobilePhoneNumber() {
+		return mobilePhoneNumber;
+	}
+	public void setMobilePhoneNumber(String mobilePhoneNumber) {
+		this.mobilePhoneNumber = mobilePhoneNumber;
+	}
+	public String getRoleName() {
+		return roleName;
+	}
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 	public String getObjectId() {
 		return objectId;
 	}

@@ -5,5 +5,6 @@ import com.rangers.soccergo.vo.system.UserVo;
 
 public interface UserManagerService {
 	public List<UserVo> listService(int page,int pageSize);
+	public List<UserVo> listAllService();
 	public int countService();
 }

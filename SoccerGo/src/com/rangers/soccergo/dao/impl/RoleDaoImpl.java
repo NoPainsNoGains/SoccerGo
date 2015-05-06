@@ -1,7 +1,6 @@
 package com.rangers.soccergo.dao.impl;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -132,5 +131,12 @@ public class RoleDaoImpl extends CommonDaoImpl<Role> implements RoleDao  {
 		query.setParam(0, objectId);
 		return query.list();
 	}
+	public int countUsersByRoleId(String objectId) {
+		String cql = "select count(*) from _User where related users to pointer('_Role',?)";
+		CloudQuery query = this.getSession().executeQuery(cql);
+		query.setParam(0, objectId);
+		return (Integer) query.exeResult("count");
+	}
+	
 
 }

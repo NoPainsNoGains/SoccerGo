@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 
 import com.rangers.soccergo.common.util.Constant;
 import com.rangers.soccergo.common.util.DateUtil;
+import com.rangers.soccergo.dao.RoleDao;
 import com.rangers.soccergo.dao.UserDao;
+import com.rangers.soccergo.model.Role;
 import com.rangers.soccergo.model.User;
 import com.rangers.soccergo.service.system.UserManagerService;
 import com.rangers.soccergo.vo.system.UserVo;
@@ -15,7 +17,15 @@ import com.rangers.soccergo.vo.system.UserVo;
 @Component("userManagerServiceImpl")
 public class UserManagerServiceImpl implements UserManagerService{
 	private UserDao userDaoImpl;
+	private RoleDao roleDaoImpl;
 	
+	public RoleDao getRoleDaoImpl() {
+		return roleDaoImpl;
+	}
+	@Resource(name="roleDaoImpl")
+	public void setRoleDaoImpl(RoleDao roleDaoImpl) {
+		this.roleDaoImpl = roleDaoImpl;
+	}
 	public UserDao getUserDaoImpl() {
 		return userDaoImpl;
 	}
@@ -42,6 +52,14 @@ public class UserManagerServiceImpl implements UserManagerService{
 			userVo.setPreferedRole(preferedRoleName);
 			userVo.setUpdatedAt(DateUtil.dateToString(user.getUpdatedAt()));
 			userVo.setUsername(user.getUsername());
+			userVo.setMobilePhoneNumber(user.getMobilePhoneNumber());
+			//设置角色名
+			List<Role> roleList = roleDaoImpl.getRoleByUserId(user.getObjectId());
+			String roleName = "";
+			if(roleList.size()!=0){
+				roleName = roleList.get(0).getName();
+			}
+			userVo.setRoleName(roleName);
 			userVoList.add(userVo);
 		}
 		return userVoList;
@@ -61,6 +79,15 @@ public class UserManagerServiceImpl implements UserManagerService{
 	 */
 	public int countService() {	
 		return userDaoImpl.count();
+	}
+	/** 
+	  * 列出所有的用户
+	  * @return 所有的用户列表
+	 */
+	public List<UserVo> listAllService() {
+		List<User> userAllList = userDaoImpl.getAll();
+		List<UserVo> userVoAllList = this.modelToVoBylist(userAllList); 
+		return userVoAllList;
 	}
 	
 }

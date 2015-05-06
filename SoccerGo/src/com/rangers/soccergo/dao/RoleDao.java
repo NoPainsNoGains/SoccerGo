@@ -13,4 +13,5 @@ public interface RoleDao extends CommonDao<Role> {
 	List<User> getUsersByRoleId(String objectId);
 	List<User> getPageUsersByRoleId(int page, int pageSize,String objectId);
 	List<Role> getRoleByUserId(String objectId);
+	int countUsersByRoleId(String objectId);
 }
