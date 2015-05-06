@@ -22,18 +22,7 @@ public class User {
     private String authData;
     private HashMap<String,Object> avatar;
     /*end*/
-   
-	/*自定义字段*/
-    /* role 格式： 
-     * "role": {
-	    "__type": "Pointer",
-	    "className": "_Role",
-	    "objectId": "5539fe29e4b069c225add71f"
-	}
-	执行role.get("objectId")得到role的Id然后根据Id查询Role表
-	*/
-    private HashMap<String,Object> role;
- 
+  
     private int prefered_role;  //擅长位置
     private String nickname;    //昵称
     private String points;      //积分
@@ -133,12 +122,6 @@ public class User {
 		this.password = password;
 	}
 	
-	public HashMap<String, Object> getRole() {
-		return role;
-	}
-	public void setRole(HashMap<String, Object> role) {
-		this.role = role;
-	}
 	@Override
 	public String toString() {
 		return "User [objectId=" + objectId + ", createdAt=" + createdAt
@@ -147,7 +130,7 @@ public class User {
 				+ ", mobilePhoneVerified=" + mobilePhoneVerified
 				+ ", mobilePhoneNumber=" + mobilePhoneNumber + ", email="
 				+ email + ", authData=" + authData + ", avatar=" + avatar
-				+ ", role=" + role + ", prefered_role=" + prefered_role
+				+ ", prefered_role=" + prefered_role
 				+ ", nickname=" + nickname + ", points=" + points + ", level="
 				+ level + "]";
 	}

@@ -115,5 +115,22 @@ public class RoleDaoImpl extends CommonDaoImpl<Role> implements RoleDao  {
 		query.setParam(2, pageSize);
 		return query.list();
 	}
+	/**   *  
+	  * 根据user的ObjectId来查询Role
+	  * 
+	  * @param s String objectId ： user的Id
+	  *          
+	  * @return List<Role> 返回Role的集合，可能一个用户有多个角色
+	  *         在本系统中，一个用户一个角色，
+	  *         所以List的size()为1表示 有角色
+	  *                        0表示 未分配角色     
+	  * @throws 
+	 */
+	public List<Role> getRoleByUserId(String objectId) {
+		String cql = "select * from _Role where users=pointer('_Role',?)";
+		CloudQuery query = this.getSession().executeQuery(cql);
+		query.setParam(0, objectId);
+		return query.list();
+	}
 
 }
