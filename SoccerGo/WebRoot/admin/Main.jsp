@@ -47,7 +47,7 @@ background:url('../images/background.jpg') repeat-x ;
 
 }
 .cs-west {
-	width:100px;padding:0px;border-left:1px solid #99BBE8;
+	width:150px;padding:0px;border-left:1px solid #99BBE8;
 }
 .cs-south {
 	height:25px;background:url('themes/gray/images/panel_title.gif') repeat-x;padding:0px;text-align:center;
@@ -71,148 +71,182 @@ background:url('../images/background.jpg') repeat-x ;
 }
 </style>
 <script type="text/javascript">
-	function addTab(title, url){
-				if ($('#tabs').tabs('exists', title)){
-					$('#tabs').tabs('select', title);//选中并刷新
-					var currTab = $('#tabs').tabs('getSelected');
-					var url = $(currTab.panel('options').content).attr('src');
-					if(url != undefined && currTab.panel('options').title != 'Home') {
-						$('#tabs').tabs('update',{
-							tab:currTab,
-							options:{
-								content:createFrame(url)
-							}
-						});
-					}//if
-				} else {
-					var content = createFrame(url);
-					$('#tabs').tabs('add',{
-						title:title,
-						content:content,
-						closable:true
-					});
-				}//if else
-				tabClose();
-			}//addTab
-			
-			function createFrame(url) {
-				var s = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
-				return s;
-			}//createFrame
-			
-			function tabClose() {
-				/*双击关闭TAB选项卡*/
-				$(".tabs-inner").dblclick(function(){
-					var subtitle = $(this).children(".tabs-closable").text();
-					$('#tabs').tabs('close',subtitle);
+$(function(){
+	var treeData;
+		$.ajax({
+				type : "post",
+				url : "/SoccerGo/admin/loadTree.action",
+				async : false,
+				dataType: "json",  
+				success : function(json) {
+				  	treeData = 	json;
+				}
+		}); 
+	$("#fream").accordion({
+       animate:true,
+       fit:true
+    });	
+	$.each(treeData,function(index,item){
+		var ul=$("<ul></ul>");
+				$(ul).tree({			
+					data:item.children,
+					lines : true,
+					onClick : function (node) {
+			            if (node.attributes.url!="/") {
+			                addTab(node.text, node.attributes.url);
+			            }
+		            }
 				});
-				/*为选项卡绑定右键*/
-				$(".tabs-inner").bind('contextmenu',function(e){
-					$('#mm').menu('show', {
-						left: e.pageX,
-						top: e.pageY
-					});
-					var subtitle =$(this).children(".tabs-closable").text();
-					$('#mm').data("currtab",subtitle);
-					$('#tabs').tabs('select',subtitle);
-					return false;
-				});
-			}//	tabClose
-			
-		
-			function tabCloseEven() {//绑定右键菜单事件
-				$('#mm-tabupdate').click(function(){	//刷新
-					var currTab = $('#tabs').tabs('getSelected');
-					var url = $(currTab.panel('options').content).attr('src');
-					if(url != undefined && currTab.panel('options').title != 'Home') {
-						$('#tabs').tabs('update',{
-							tab:currTab,
-							options:{
-								content:createFrame(url)
-							}
-						});
-					}
-				});
-				$('#mm-tabclose').click(function(){	//关闭当前
-					var currtab_title = $('#mm').data("currtab");
-					$('#tabs').tabs('close',currtab_title);
-				});	
-				$('#mm-tabcloseall').click(function(){//全部关闭
-					$('.tabs-inner span').each(function(i,n){
-						var t = $(n).text();
-						if(t != 'Home') {
-							$('#tabs').tabs('close',t);
+				$('#fream').accordion('add', {
+				title: item.text,
+				content: ul
+		   });
+	});	
+	function addTab(title, url) {
+			if ($('#tabs').tabs('exists', title)) {
+				$('#tabs').tabs('select', title);//选中并刷新
+				var currTab = $('#tabs').tabs('getSelected');
+				var url = $(currTab.panel('options').content).attr('src');
+				if (url != undefined
+						&& currTab.panel('options').title != 'Home') {
+					$('#tabs').tabs('update', {
+						tab : currTab,
+						options : {
+							content : createFrame(url)
 						}
 					});
+				}//if
+			} else {
+				var content = createFrame(url);
+				$('#tabs').tabs('add', {
+					title : title,
+					content : content,
+					closable : true
 				});
-				$('#mm-tabcloseother').click(function(){//关闭除当前之外的TAB
-					var prevall = $('.tabs-selected').prevAll();
-					var nextall = $('.tabs-selected').nextAll();		
-					if(prevall.length>0){
-						prevall.each(function(i,n){
-							var t=$('a:eq(0) span',$(n)).text();
-							if(t != 'Home') {
-								$('#tabs').tabs('close',t);
-							}
-						});
-					}
-					if(nextall.length>0) {
-						nextall.each(function(i,n){
-							var t=$('a:eq(0) span',$(n)).text();
-							if(t != 'Home') {
-								$('#tabs').tabs('close',t);
-							}
-						});
-					}
-					return false;
-				});
-				$('#mm-tabcloseright').click(function(){//关闭当前右侧的TAB
-					var nextall = $('.tabs-selected').nextAll();
-					if(nextall.length==0){
-						//msgShow('系统提示','后边没有啦~~','error');
-						alert('后边没有啦~~');
-						return false;
-					}
-					nextall.each(function(i,n){
-						var t=$('a:eq(0) span',$(n)).text();
-						$('#tabs').tabs('close',t);
-					});
-					return false;
-				});
-				$('#mm-tabcloseleft').click(function(){	//关闭当前左侧的TAB
-					var prevall = $('.tabs-selected').prevAll();
-					if(prevall.length==0){
-						alert('到头了，前边没有啦~~');
-						return false;
-					}
-					prevall.each(function(i,n){
-						var t=$('a:eq(0) span',$(n)).text();
-						$('#tabs').tabs('close',t);
-					});
-					return false;
-				});	
-				$("#mm-exit").click(function(){//退出
-					$('#mm').menu('hide');
-				});
-			}//tabCloseEven
-	
-		$(function() {
-			tabCloseEven();
-			$('.cs-navi-tab').click(function() {
-				var $this = $(this);
-				var href = $this.attr('src');
-				var title = $this.text();
-				addTab(title, href);
+			}//if else
+			tabClose();
+		}//addTab
+
+		function createFrame(url) {
+			var s = '<iframe scrolling="auto" frameborder="0"  src="' + url
+					+ '" style="width:100%;overflow:hidden; height:98%"></iframe>';
+			return s;
+		}//createFrame
+
+		function tabClose() {
+			/*双击关闭TAB选项卡*/
+			$(".tabs-inner").dblclick(function() {
+				var subtitle = $(this).children(".tabs-closable").text();
+				$('#tabs').tabs('close', subtitle);
 			});
-			$('body').layout();
-			$('body').css('visibility', 'visible');
+			/*为选项卡绑定右键*/
+			$(".tabs-inner").bind('contextmenu', function(e) {
+				$('#mm').menu('show', {
+					left : e.pageX,
+					top : e.pageY
+				});
+				var subtitle = $(this).children(".tabs-closable").text();
+				$('#mm').data("currtab", subtitle);
+				$('#tabs').tabs('select', subtitle);
+				return false;
+			});
+		}//	tabClose
+
+		function tabCloseEven() {//绑定右键菜单事件
+			$('#mm-tabupdate').click(
+					function() { //刷新
+						var currTab = $('#tabs').tabs('getSelected');
+						var url = $(currTab.panel('options').content).attr(
+								'src');
+						if (url != undefined
+								&& currTab.panel('options').title != 'Home') {
+							$('#tabs').tabs('update', {
+								tab : currTab,
+								options : {
+									content : createFrame(url)
+								}
+							});
+						}
+					});
+			$('#mm-tabclose').click(function() { //关闭当前
+				var currtab_title = $('#mm').data("currtab");
+				$('#tabs').tabs('close', currtab_title);
+			});
+			$('#mm-tabcloseall').click(function() {//全部关闭
+				$('.tabs-inner span').each(function(i, n) {
+					var t = $(n).text();
+					if (t != 'Home') {
+						$('#tabs').tabs('close', t);
+					}
+				});
+			});
+			$('#mm-tabcloseother').click(function() {//关闭除当前之外的TAB
+				var prevall = $('.tabs-selected').prevAll();
+				var nextall = $('.tabs-selected').nextAll();
+				if (prevall.length > 0) {
+					prevall.each(function(i, n) {
+						var t = $('a:eq(0) span', $(n)).text();
+						if (t != 'Home') {
+							$('#tabs').tabs('close', t);
+						}
+					});
+				}
+				if (nextall.length > 0) {
+					nextall.each(function(i, n) {
+						var t = $('a:eq(0) span', $(n)).text();
+						if (t != 'Home') {
+							$('#tabs').tabs('close', t);
+						}
+					});
+				}
+				return false;
+			});
+			$('#mm-tabcloseright').click(function() {//关闭当前右侧的TAB
+				var nextall = $('.tabs-selected').nextAll();
+				if (nextall.length == 0) {
+					//msgShow('系统提示','后边没有啦~~','error');
+					alert('后边没有啦~~');
+					return false;
+				}
+				nextall.each(function(i, n) {
+					var t = $('a:eq(0) span', $(n)).text();
+					$('#tabs').tabs('close', t);
+				});
+				return false;
+			});
+			$('#mm-tabcloseleft').click(function() { //关闭当前左侧的TAB
+				var prevall = $('.tabs-selected').prevAll();
+				if (prevall.length == 0) {
+					alert('到头了，前边没有啦~~');
+					return false;
+				}
+				prevall.each(function(i, n) {
+					var t = $('a:eq(0) span', $(n)).text();
+					$('#tabs').tabs('close', t);
+				});
+				return false;
+			});
+			$("#mm-exit").click(function() {//退出
+				$('#mm').menu('hide');
+			});
+		}//tabCloseEven
+
+		tabCloseEven();
+		$('.cs-navi-tab').click(function() {
+			var $this = $(this);
+			var href = $this.attr('src');
+			var title = $this.text();
+			addTab(title, href);
 		});
+		$('body').layout();
+		$('body').css('visibility', 'visible');
+	});//function
 </script>
 <script type="text/javascript">
 function logout(){
 	$.messager.confirm('请确认', '您确定要退出系统吗？', function(r){
 		if (r){
-			location.href = 'Logout.action';
+			location.href = '/SoccerGo/admin/loginOut.action';
 		}
 	});	
 }
@@ -224,14 +258,8 @@ function logout(){
 		 <div id="Layer1" style="text-align:right"><a href="javascript:logout()"><font color="#067dae" >用户退出</font></a></div>
 	</div>
 	<div region="west" border="true" split="true" title="菜单" class="cs-west">
-			<div class="easyui-accordion" fit="true" border="false">
-				<div title="模块管理">
-					<a href="javascript:void(0);" src="ModuleManage/ModuleShow.jsp" class="cs-navi-tab">模块管理</a></p>
-				</div>
-				<div title="用户管理">
-					<a href="javascript:void(0);" src="SystemManage/UserManage.jsp" class="cs-navi-tab">用户管理</a></p>
-					<a href="javascript:void(0);" src="SystemManage/RoleManage.jsp" class="cs-navi-tab">职务管理</a></p>
-				</div>
+		<div id="fream" class="easyui-accordion" >
+			
 		</div>
 	</div>
 	<div id="mainPanle" region="center" border="true" border="false">

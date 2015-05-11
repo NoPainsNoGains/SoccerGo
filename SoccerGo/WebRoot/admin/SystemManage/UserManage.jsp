@@ -190,7 +190,7 @@
 				    	$.ajax({
 					        cache: true,
 					        type: "POST",
-					        url:"/SoccerGo/admin/SystemManage/RoleManager/addUserRole.action",
+					        url:"/SoccerGo/admin/ModuleAuthority/list.action",
 					        data:{"roleId":data.objectId,"userId":selectedItem.objectId},
 					        async: false,
 					        dataType: "json",

@@ -3,22 +3,17 @@ package com.rangers.soccergo.controller.system;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONObject;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.rangers.soccergo.db.util.JsonUtil;
 import com.rangers.soccergo.service.system.RoleManagerService;
 import com.rangers.soccergo.vo.system.RolePage;
 import com.rangers.soccergo.vo.system.RoleVo;
 import com.rangers.soccergo.vo.system.UserPage;
-import com.rangers.soccergo.vo.system.UserVo;
 
 @Controller   
 @RequestMapping("/admin/SystemManage/RoleManager") 
@@ -136,5 +131,12 @@ public class RoleManagerController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	/** 
+	  * 列出所有的角色
+	 */
+	@RequestMapping("/deletRole.action") 
+	public void deletRole(HttpServletRequest request,HttpServletResponse response){
+		
 	}
 }

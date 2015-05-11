@@ -21,8 +21,10 @@
 	<body>
 		<div id="grid"></div>
 		<script>
+			var strId = undefined;	
 			var record = 0;
 			var inrecord = 0;
+			var selectedItem = undefined;
 			var inObjectId = undefined;
 		    $(document).ready(function() {
                     var element = $("#grid").kendoGrid({
@@ -71,6 +73,7 @@
                         },
                         height: 750,
                         toolbar: [{ name: "create", text: "创建角色" }],
+                        selectable:"row",
                         sortable: true,
                         pageable: true,
                         detailInit: detailInit,
@@ -102,6 +105,10 @@
 		                    	 e.container.find(".k-grid-update").insertAfter(".k-grid-cancel");
 			                       
 			                } 
+	           			 },
+	 					 change:function(e){
+	           			 		var grid = $("#grid").data("kendoGrid");
+								selectedItem = grid.dataItem(grid.select());	
 	           			 },
 	           			 dataBinding: function() {
 	   						 record = (this.dataSource.page() -1) * this.dataSource.pageSize();
@@ -182,7 +189,6 @@
 	                            refresh : "刷新"
 	                        }
 	                    },
-                  		selectable:"row",
                         columns: [
                     		  {title: "序号",template: "#= ++inrecord #",width: 100}, 
                     		  { field: "mobilePhoneNumber", title: "手机号"},     
@@ -204,11 +210,7 @@
 	           			  },
 	           			  dataBinding: function() {
 	   						 inrecord = (this.dataSource.page() -1) * this.dataSource.pageSize();
-	 					 },
-	 					 change:function(e){
-	           			 		var grid = $("#grid").data("kendoGrid");
-								selectedItem = grid.dataItem(grid.select());	
-	           			 }
+	 					 }
                     });
                    	
                 }
@@ -227,14 +229,101 @@
 				    }
 			    }
 			   
-			    function roleAuthorityEdit(){
-			    	alert("编辑角色权限");
-			   }
+			    function roleAuthorityEdit(){			    
+			    	var data = undefined;//获取权限树	
+				    $.ajax({
+					     url: "/SoccerGo/admin/ModuleAuthority/list.action",
+					     async: false,
+					     dataType: "json",
+					     data:{"roleId":selectedItem.objectId},
+					     success: function(d){
+							data = d;
+					    }
+				    });
+				    var dataSource = new kendo.data.HierarchicalDataSource({     
+						data: data,
+						schema: {
+				        	model: {
+				        		id:"id",
+				        		hasChildren : "hasChildren",
+				                children: "items",
+				                checked:"checked"
+				            }
+				        }	
+					 });
+					 var treeview = $("#treeviewEdit").kendoTreeView({
+						checkboxes: {			
+	            			checkChildren: true
+	        			},
+		                dataSource: dataSource,
+		                dataValueField: "id",
+				        dataTextField: "text"
+		             }).data("kendoTreeView");   
+		             treeview.expand(".k-item");//展开一级子树
+		             treeview.expand(".k-item");//展开二级子树
+		             treeview.collapse(".k-item");
+		             treeview.collapse(".k-item");
+		             /*打开窗口*/
+					 var windowEdit = $("#windows");
+						if (!windowEdit.data("kendoWindow")) {
+						windowEdit = windowEdit.kendoWindow({
+							width: "250px",
+							draggable: true,
+							modal: true,
+							resizable: true,
+							visible: true,
+							title: "角色权限选择",
+						});
+					}
+					windowEdit.data("kendoWindow").open();
+					windowEdit.data("kendoWindow").center();
+					$("#treeviewEdit").data("kendoTreeView").dataSource.bind("change", function() {
+			            var checkedNodes = [],treeView = $("#treeviewEdit").data("kendoTreeView"),message;
+			            checkedNodeIds(treeView.dataSource.view(), checkedNodes);
+			  			strId =checkedNodes.join(",");
+			       }); 
+	          		function checkedNodeIds(nodes, checkedNodes) {
+			            for (var i = 0; i < nodes.length; i++) {
+			               	if (nodes[i].checked) {
+			                    checkedNodes.push(nodes[i].id);
+			                }
+			                if (nodes[i].hasChildren) {
+			                    checkedNodeIds(nodes[i].children.view(), checkedNodes);
+			                }
+			            }
+          			}      
+			   }//roleEdit
+			   function setSave(){
+				 	var grid = $("#grid").data("kendoGrid");
+					selectedItem = grid.dataItem(grid.select());//获取选择行对象	
+					if(strId!=undefined&&strId!=""){//用户没有选择
+						strId=strId+","+selectedItem.objectId;
+						if (strId.length > 1) {	         
+				           	 $.ajax({
+							     url: "/SoccerGo/admin/ModuleAuthority/update.action",
+							     async: false,
+							     dataType: "json",
+							     data:{"authoritySet":strId},
+							     success: function(flag) {
+					         		var windows = $("#windows");
+							    	windows.data("kendoWindow").close();
+							    	window.location.reload();		
+						        }
+					    	});
+				        } 
+					}				
+				}
 		</script>
 		<script id="popup-editor" type="text/x-kendo-template"> 
   				<p>
    					<label style="margin-left:40px;">角色名: <input data-bind="value:name" style="width: 200px;" class="k-textbox" placeholder="必须填写角色名" required validationMessage="不能为空"/></label>
  				</p>
 		</script>
+		 <div  id="windows" type="text/x-kendo-template" style="display:none;">
+              <div id="treeviewEdit" style="margin-left:10px;"></div> 
+              <div style="float:right;">
+	 			  	 <a class='k-button' onclick='setSave()'>确定</a>
+	 		  </div> 
+          </div>
 	</body>
 </html>

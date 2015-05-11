@@ -8,15 +8,19 @@ import javax.annotation.Resource;
 import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Component;
-
 import com.rangers.soccergo.common.util.Constant;
 import com.rangers.soccergo.common.util.DateUtil;
 import com.rangers.soccergo.common.util.ModelToVoUtil;
+import com.rangers.soccergo.common.util.SplitUtil;
+import com.rangers.soccergo.dao.ModuleDao;
+import com.rangers.soccergo.dao.RoleAuthorityDao;
 import com.rangers.soccergo.dao.RoleDao;
 import com.rangers.soccergo.dao.UserDao;
+import com.rangers.soccergo.model.Module;
 import com.rangers.soccergo.model.Role;
 import com.rangers.soccergo.model.User;
 import com.rangers.soccergo.service.system.RoleManagerService;
+import com.rangers.soccergo.vo.module.ModuleMangerTree;
 import com.rangers.soccergo.vo.system.RoleVo;
 import com.rangers.soccergo.vo.system.UserVo;
 /**  

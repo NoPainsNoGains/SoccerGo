@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import com.rangers.soccergo.vo.module.ModuleMangerTree;
 import com.rangers.soccergo.vo.system.RoleVo;
 import com.rangers.soccergo.vo.system.UserVo;
 
@@ -16,4 +17,5 @@ public interface RoleManagerService {
 	public int countRoleUserService(String roleObjectId);
 	public void addRoleUser(String RoleId,String UserId);
 	public void deletRoleUser(String RoleId,String UserId);
+
 }

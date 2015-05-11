@@ -2,8 +2,6 @@ package com.rangers.soccergo.model;
 
 import java.util.Date;
 import java.util.HashMap;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -12,7 +10,6 @@ public class Module {
 	private String objectId;
 	private Date createdAt;
 	private Date updatedAt;
-	private String id;
 	private String module_name;
 	private int status;
 	private HashMap<String,Object> father_id;
@@ -21,12 +18,6 @@ public class Module {
 	private String module_code;
 	private boolean isCatalogue;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getObjectId() {
 		return objectId;
 	}
@@ -91,11 +82,12 @@ public class Module {
 	@Override
 	public String toString() {
 		return "Module [objectId=" + objectId + ", createdAt=" + createdAt
-				+ ", updatedAt=" + updatedAt + ", module_name=" + module_name
-				+ ", status=" + status + ", father_id=" + father_id
-				+ ", remark=" + remark + ", page=" + page + ", module_code="
-				+ module_code + ", isCatalogue=" + isCatalogue + "]";
+				+ ", updatedAt=" + updatedAt + ", module_name=" + module_name + ", status=" + status
+				+ ", father_id=" + father_id + ", remark=" + remark + ", page="
+				+ page + ", module_code=" + module_code + ", isCatalogue="
+				+ isCatalogue + "]";
 	}
+	
 	
 	
 }
