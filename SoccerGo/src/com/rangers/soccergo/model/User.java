@@ -21,6 +21,8 @@ public class User {
     @JsonIgnore
     private String authData;
     private HashMap<String,Object> avatar;
+    @JsonIgnore
+    private String sessionToken;
     /*end*/
   
     private int prefered_role;  //擅长位置
@@ -31,6 +33,12 @@ public class User {
     
 	public String getObjectId() {
 		return objectId;
+	}
+	public String getSessionToken() {
+		return sessionToken;
+	}
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
 	}
 	public void setObjectId(String objectId) {
 		this.objectId = objectId;
